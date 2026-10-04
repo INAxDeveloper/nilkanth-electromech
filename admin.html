@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Nilkanth Electromech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #26354a;
+      --bg-input: #0f172a;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --sidebar-w: 260px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: #0a0f1d;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      z-index: 100;
+    }
+    .sidebar-header {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      padding: 4px;
+      object-fit: contain;
+    }
+    .sidebar-title h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+    .sidebar-title span {
+      font-size: 0.72rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .sidebar-nav {
+      list-style: none;
+      padding: 20px 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      padding: 12px 14px 6px;
+      font-weight: 700;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+    .nav-item.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+    .nav-item i { width: 18px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-live {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      transition: all 0.2s;
+    }
+    .btn-live:hover { background: rgba(255,255,255,0.1); border-color: #64748b; }
+
+    /* Main Content */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .topbar {
+      height: 70px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-badge.unsaved {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover { background: var(--bg-card-hover); }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    /* Content Area */
+    .content {
+      padding: 32px;
+      flex: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-title i { color: var(--primary); }
+
+    /* Grid layouts */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+    /* Stat Cards */
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+    .stat-icon.blue { background: rgba(37, 99, 235, 0.15); color: #60a5fa; }
+    .stat-icon.amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .stat-icon.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .stat-meta h3 { font-size: 1.6rem; font-weight: 800; color: #fff; line-height: 1.1; }
+    .stat-meta p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* Form Inputs */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.92rem;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    textarea.form-control { resize: vertical; min-height: 90px; }
+
+    /* Item Grid (Products / Services) */
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .item-card {
+      background: #141f33;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+    .item-card:hover { border-color: #475569; transform: translateY(-2px); }
+    .item-img {
+      height: 160px;
+      width: 100%;
+      object-fit: cover;
+      background: #0b1120;
+    }
+    .item-body {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .item-cat {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .item-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .item-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 12px;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h3 { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .modal-body { padding: 24px; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      z-index: 999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+    .toast i { font-size: 1.2rem; }
+    .toast.success i { color: var(--success); }
+    .toast.error i { color: var(--danger); }
+
+    /* Responsive */
+    @media(max-width: 900px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrap { margin-left: 0; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="images/NE@2x.png" alt="Nilkanth Logo" class="sidebar-logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><rect width=%2240%22 height=%2240%22 fill=%22%232563eb%22/><text x=%2220%22 y=%2225%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2216%22>NE</text></svg>'">
+      <div class="sidebar-title">
+        <h2>Nilkanth</h2>
+        <span>Admin Panel</span>
+      </div>
+    </div>
+    <ul class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <li class="nav-item active" data-tab="tab-overview">
+        <i class="fas fa-chart-pie"></i> Overview
+      </li>
+      <li class="nav-item" data-tab="tab-company">
+        <i class="fas fa-building"></i> Company & Contact
+      </li>
+      <li class="nav-item" data-tab="tab-products">
+        <i class="fas fa-bolt"></i> Products Manager
+      </li>
+      <li class="nav-item" data-tab="tab-services">
+        <i class="fas fa-tools"></i> Services Manager
+      </li>
+      <li class="nav-item" data-tab="tab-about">
+        <i class="fas fa-info-circle"></i> About & Stats
+      </li>
+      <div class="nav-label">Configuration</div>
+      <li class="nav-item" data-tab="tab-github">
+        <i class="fab fa-github"></i> GitHub Settings
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="index.html" target="_blank" class="btn-live">
+        <i class="fas fa-external-link-alt"></i> View Live Website
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="main-wrap">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="menuToggle" class="btn btn-secondary" style="display:none;padding:8px 12px;"><i class="fas fa-bars"></i></button>
+        <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
+        <div class="status-badge" id="saveBadge">
+          <i class="fas fa-check-circle"></i> In Sync
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-secondary" id="btnExport">
+          <i class="fas fa-download"></i> Backup JSON
+        </button>
+        <button class="btn btn-primary" id="btnPublish">
+          <i class="fas fa-cloud-upload-alt"></i> Save & Publish
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Tabs -->
+    <main class="content">
+
+      <!-- Tab: Overview -->
+      <section class="tab-pane active" id="tab-overview">
+        <div class="grid-4" style="margin-bottom:24px;">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-bolt"></i></div>
+            <div class="stat-meta">
+              <h3 id="statProductCount">6</h3>
+              <p>Active Products</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-tools"></i></div>
+            <div class="stat-meta">
+              <h3 id="statServiceCount">6</h3>
+              <p>Active Services</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-shield-alt"></i></div>
+            <div class="stat-meta">
+              <h3>100% Free</h3>
+              <p>Hosting on GitHub</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-code-branch"></i></div>
+            <div class="stat-meta">
+              <h3>main</h3>
+              <p>Active Branch</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-rocket"></i> Quick Actions</h3>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <button class="btn btn-secondary" onclick="switchTab('tab-products'); openProductModal();" style="justify-content:flex-start;">
+                <i class="fas fa-plus-circle" style="color:var(--primary);"></i> Add New Electrical Panel
+              </button>
+              <button class="btn btn-secondary" onclick="switchTab('tab-company');" style="justify-content:flex-start;">
+                <i class="fas fa-phone-alt" style="color:var(--accent);"></i> Update Phone / Email / Address
+              </button>
+              <button class="btn btn-secondary" onclick="switchTab('tab-services');" style="justify-content:flex-start;">
+                <i class="fas fa-wrench" style="color:var(--success);"></i> Manage Services List
+              </button>
+              <button class="btn btn-secondary" onclick="switchTab('tab-github');" style="justify-content:flex-start;">
+                <i class="fab fa-github" style="color:#fff;"></i> Configure GitHub Token
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-info-circle"></i> How Auto-Publish Works</h3>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;margin-bottom:14px;">
+              When you make edits to products, services, or contact details and click <strong>"Save & Publish"</strong>:
+            </p>
+            <ol style="color:var(--text-muted);font-size:0.88rem;line-height:1.7;padding-left:20px;">
+              <li>Your changes are instantly packaged into <code>data/site-data.json</code>.</li>
+              <li>Saved directly to your GitHub repository (<code>INAxDeveloper/nilkanth-electromech</code>) via GitHub API.</li>
+              <li>GitHub Pages automatically deploys the update in 30–60 seconds.</li>
+              <li><strong>Zero server cost</strong> — completely free forever!</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Company Info -->
+      <section class="tab-pane" id="tab-company">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-building"></i> Company Information</h3>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Company Name</label>
+              <input type="text" class="form-control" id="compName">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tagline / Slogan</label>
+              <input type="text" class="form-control" id="compTagline">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Official Email</label>
+              <input type="email" class="form-control" id="compEmail">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Phone / WhatsApp</label>
+              <input type="text" class="form-control" id="compPhone">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">Factory / Office Address</label>
+              <input type="text" class="form-control" id="compAddress">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Working Hours</label>
+              <input type="text" class="form-control" id="compHours">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Website Domain</label>
+              <input type="text" class="form-control" id="compWebsite">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links</h3>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp Direct Link</label>
+              <input type="text" class="form-control" id="socialWhatsapp" placeholder="https://wa.me/91...">
+            </div>
+            <div class="form-group">
+              <label class="form-label"><i class="fab fa-linkedin" style="color:#0a66c2;"></i> LinkedIn URL</label>
+              <input type="text" class="form-control" id="socialLinkedin" placeholder="https://linkedin.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label"><i class="fab fa-facebook" style="color:#1877f2;"></i> Facebook URL</label>
+              <input type="text" class="form-control" id="socialFacebook" placeholder="https://facebook.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label"><i class="fab fa-instagram" style="color:#e4405f;"></i> Instagram URL</label>
+              <input type="text" class="form-control" id="socialInstagram" placeholder="https://instagram.com/...">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Products -->
+      <section class="tab-pane" id="tab-products">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-bolt"></i> Electrical Panels & Products</h3>
+            <button class="btn btn-primary btn-sm" onclick="openProductModal()">
+              <i class="fas fa-plus"></i> Add New Product
+            </button>
+          </div>
+          <div class="item-grid" id="productsList">
+            <!-- Dynamic product cards -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Services -->
+      <section class="tab-pane" id="tab-services">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-tools"></i> Services & Solutions</h3>
+            <button class="btn btn-primary btn-sm" onclick="openServiceModal()">
+              <i class="fas fa-plus"></i> Add New Service
+            </button>
+          </div>
+          <div class="item-grid" id="servicesList">
+            <!-- Dynamic service cards -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: About & Stats -->
+      <section class="tab-pane" id="tab-about">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-info-circle"></i> About Section Content</h3>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Tag / Badge</label>
+            <input type="text" class="form-control" id="aboutBadge">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Main Heading</label>
+            <input type="text" class="form-control" id="aboutHeading">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Paragraph 1</label>
+            <textarea class="form-control" id="aboutP1"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Paragraph 2</label>
+            <textarea class="form-control" id="aboutP2"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-trophy"></i> Experience & Metrics Stats</h3>
+          </div>
+          <div class="grid-4" id="statsList">
+            <!-- Dynamic stats fields -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: GitHub Settings -->
+      <section class="tab-pane" id="tab-github">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fab fa-github"></i> GitHub Auto-Publish Setup</h3>
+          </div>
+          <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;margin-bottom:20px;">
+            To enable one-click publishing directly to GitHub Pages, provide a GitHub Personal Access Token (PAT). It is stored securely in your browser's private storage (<code>localStorage</code>) and never sent to any outside server.
+          </p>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">GitHub Repository Owner</label>
+              <input type="text" class="form-control" id="ghOwner" value="INAxDeveloper">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Repository Name</label>
+              <input type="text" class="form-control" id="ghRepo" value="nilkanth-electromech">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label">GitHub Personal Access Token (PAT)</label>
+              <div style="display:flex;gap:10px;">
+                <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                <button class="btn btn-secondary" type="button" id="btnToggleToken" onclick="toggleTokenVisibility()">
+                  <i class="fas fa-eye" id="tokenEye"></i>
+                </button>
+                <button class="btn btn-secondary" type="button" onclick="testGitHubConnection()">
+                  <i class="fas fa-plug"></i> Test
+                </button>
+              </div>
+              <small style="color:var(--text-muted);font-size:0.8rem;margin-top:6px;display:block;">
+                Don't have a token? <a href="https://github.com/settings/tokens/new?scopes=repo&description=Nilkanth%20Admin%20Panel" target="_blank" style="color:var(--primary);text-decoration:none;font-weight:600;">Click here to generate one on GitHub (1-click)</a> with <code>repo</code> permissions.
+              </small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="productModalTitle">Add New Product</h3>
+        <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="prodEditId">
+        <div class="form-group">
+          <label class="form-label">Product / Panel Name</label>
+          <input type="text" class="form-control" id="prodTitle" placeholder="e.g. Capacitor Panel">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <input type="text" class="form-control" id="prodCategory" placeholder="e.g. Power Distribution">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Image Path / URL</label>
+          <input type="text" class="form-control" id="prodImage" placeholder="images/MCC_1-500x225.jpg">
+          <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">
+            Choose from existing: <code>images/MCC_1-500x225.jpg</code>, <code>images/PPC-Panel-500x375.jpeg</code>, <code>images/APFC_NEW_1-500x375.jpg</code>, <code>images/PLC_NEW_1-500x375.jpg</code>, <code>images/DG-Sync_1-500x277.jpg</code>, <code>images/Outdoor-lt_1-500x375.jpg</code>
+          </small>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="prodDesc" placeholder="Enter product description and specifications..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Modal -->
+  <div class="modal-overlay" id="serviceModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="serviceModalTitle">Add New Service</h3>
+        <button class="modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="servEditId">
+        <div class="form-group">
+          <label class="form-label">Service Title</label>
+          <input type="text" class="form-control" id="servTitle" placeholder="e.g. Industrial Automation">
+        </div>
+        <div class="form-group">
+          <label class="form-label">FontAwesome Icon Class</label>
+          <input type="text" class="form-control" id="servIcon" placeholder="fas fa-tools">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Image Path</label>
+          <input type="text" class="form-control" id="servImage" placeholder="images/fabrication_work-500x281.jpg">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="servDesc" placeholder="Describe the service..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeServiceModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveService()">Save Service</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <i class="fas fa-info-circle"></i>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <script>
+    // --- Application State ---
+    const isSubfolder = window.location.pathname.endsWith('/admin/') || window.location.pathname.includes('/admin/index.html');
+    const basePath = isSubfolder ? '../' : '';
+
+    let siteData = null;
+    let hasUnsavedChanges = false;
+
+    // Load initial JSON data
+    async function initData() {
+      try {
+        const res = await fetch(basePath + 'data/site-data.json?t=' + Date.now());
+        if(!res.ok) throw new Error('Failed to load JSON');
+        siteData = await res.json();
+      } catch (err) {
+        showToast('Error loading data/site-data.json: ' + err.message, 'error');
+        return;
+      }
+      populateForms();
+      renderProducts();
+      renderServices();
+      renderStats();
+      loadGitHubSettings();
+      updateSaveBadge(false);
+    }
+
+    function populateForms() {
+      if(!siteData) return;
+      // Company
+      const c = siteData.company || {};
+      document.getElementById('compName').value = c.name || '';
+      document.getElementById('compTagline').value = c.tagline || '';
+      document.getElementById('compEmail').value = c.email || '';
+      document.getElementById('compPhone').value = c.phone || '';
+      document.getElementById('compAddress').value = c.address || '';
+      document.getElementById('compHours').value = c.workingHours || '';
+      document.getElementById('compWebsite').value = c.website || '';
+      // Social
+      const s = c.social || {};
+      document.getElementById('socialWhatsapp').value = s.whatsapp || '';
+      document.getElementById('socialLinkedin').value = s.linkedin || '';
+      document.getElementById('socialFacebook').value = s.facebook || '';
+      document.getElementById('socialInstagram').value = s.instagram || '';
+      // About
+      const a = siteData.about || {};
+      document.getElementById('aboutBadge').value = a.badge || '';
+      document.getElementById('aboutHeading').value = a.heading || '';
+      document.getElementById('aboutP1').value = a.paragraph1 || '';
+      document.getElementById('aboutP2').value = a.paragraph2 || '';
+      // Overview stats
+      document.getElementById('statProductCount').textContent = (siteData.products || []).length;
+      document.getElementById('statServiceCount').textContent = (siteData.services || []).length;
+    }
+
+    // --- Products ---
+    function renderProducts() {
+      const container = document.getElementById('productsList');
+      if(!container) return;
+      const products = siteData.products || [];
+      document.getElementById('statProductCount').textContent = products.length;
+      container.innerHTML = products.map((p, idx) => {
+        const imgSrc = p.image.startsWith('http') ? p.image : (basePath + p.image);
+        return `
+        <div class="item-card">
+          <img src="${imgSrc}" alt="${p.title}" class="item-img" onerror="this.src='${basePath}images/NE@2x.png'">
+          <div class="item-body">
+            <span class="item-cat">${p.category || 'Panel'}</span>
+            <h4 class="item-title">${p.title}</h4>
+            <p class="item-desc">${p.description}</p>
+            <div class="item-actions">
+              <button class="btn btn-secondary btn-sm" onclick="editProduct(${idx})">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteProduct(${idx})">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function openProductModal(idx = null) {
+      document.getElementById('prodEditId').value = idx !== null ? idx : '';
+      if(idx !== null) {
+        const p = siteData.products[idx];
+        document.getElementById('productModalTitle').textContent = 'Edit Product';
+        document.getElementById('prodTitle').value = p.title;
+        document.getElementById('prodCategory').value = p.category || '';
+        document.getElementById('prodImage').value = p.image || '';
+        document.getElementById('prodDesc').value = p.description || '';
+      } else {
+        document.getElementById('productModalTitle').textContent = 'Add New Product';
+        document.getElementById('prodTitle').value = '';
+        document.getElementById('prodCategory').value = '';
+        document.getElementById('prodImage').value = 'images/MCC_1-500x225.jpg';
+        document.getElementById('prodDesc').value = '';
+      }
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('active');
+    }
+
+    function saveProduct() {
+      const title = document.getElementById('prodTitle').value.trim();
+      if(!title) { alert('Please enter product title'); return; }
+      const category = document.getElementById('prodCategory').value.trim();
+      const image = document.getElementById('prodImage').value.trim();
+      const description = document.getElementById('prodDesc').value.trim();
+      const editId = document.getElementById('prodEditId').value;
+
+      if(editId !== '') {
+        const idx = parseInt(editId);
+        siteData.products[idx] = { ...siteData.products[idx], title, category, image, description };
+      } else {
+        const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        siteData.products.push({ id, title, category, image, description });
+      }
+      closeProductModal();
+      renderProducts();
+      updateSaveBadge(true);
+      showToast('Product updated!', 'success');
+    }
+
+    function editProduct(idx) { openProductModal(idx); }
+
+    function deleteProduct(idx) {
+      if(!confirm('Are you sure you want to delete "' + siteData.products[idx].title + '"?')) return;
+      siteData.products.splice(idx, 1);
+      renderProducts();
+      updateSaveBadge(true);
+      showToast('Product deleted', 'success');
+    }
+
+    // --- Services ---
+    function renderServices() {
+      const container = document.getElementById('servicesList');
+      if(!container) return;
+      const services = siteData.services || [];
+      document.getElementById('statServiceCount').textContent = services.length;
+      container.innerHTML = services.map((s, idx) => {
+        const imgSrc = s.image.startsWith('http') ? s.image : (basePath + s.image);
+        return `
+        <div class="item-card">
+          <img src="${imgSrc}" alt="${s.title}" class="item-img" onerror="this.src='${basePath}images/fabrication_work-500x281.jpg'">
+          <div class="item-body">
+            <span class="item-cat"><i class="${s.icon || 'fas fa-cog'}"></i> Service</span>
+            <h4 class="item-title">${s.title}</h4>
+            <p class="item-desc">${s.description}</p>
+            <div class="item-actions">
+              <button class="btn btn-secondary btn-sm" onclick="editService(${idx})">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteService(${idx})">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function openServiceModal(idx = null) {
+      document.getElementById('servEditId').value = idx !== null ? idx : '';
+      if(idx !== null) {
+        const s = siteData.services[idx];
+        document.getElementById('serviceModalTitle').textContent = 'Edit Service';
+        document.getElementById('servTitle').value = s.title;
+        document.getElementById('servIcon').value = s.icon || 'fas fa-tools';
+        document.getElementById('servImage').value = s.image || '';
+        document.getElementById('servDesc').value = s.description || '';
+      } else {
+        document.getElementById('serviceModalTitle').textContent = 'Add New Service';
+        document.getElementById('servTitle').value = '';
+        document.getElementById('servIcon').value = 'fas fa-tools';
+        document.getElementById('servImage').value = 'images/fabrication_work-500x281.jpg';
+        document.getElementById('servDesc').value = '';
+      }
+      document.getElementById('serviceModal').classList.add('active');
+    }
+
+    function closeServiceModal() {
+      document.getElementById('serviceModal').classList.remove('active');
+    }
+
+    function saveService() {
+      const title = document.getElementById('servTitle').value.trim();
+      if(!title) { alert('Please enter service title'); return; }
+      const icon = document.getElementById('servIcon').value.trim();
+      const image = document.getElementById('servImage').value.trim();
+      const description = document.getElementById('servDesc').value.trim();
+      const editId = document.getElementById('servEditId').value;
+
+      if(editId !== '') {
+        const idx = parseInt(editId);
+        siteData.services[idx] = { ...siteData.services[idx], title, icon, image, description };
+      } else {
+        const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        siteData.services.push({ id, title, icon, image, description });
+      }
+      closeServiceModal();
+      renderServices();
+      updateSaveBadge(true);
+      showToast('Service updated!', 'success');
+    }
+
+    function editService(idx) { openServiceModal(idx); }
+
+    function deleteService(idx) {
+      if(!confirm('Are you sure you want to delete "' + siteData.services[idx].title + '"?')) return;
+      siteData.services.splice(idx, 1);
+      renderServices();
+      updateSaveBadge(true);
+      showToast('Service deleted', 'success');
+    }
+
+    // --- Stats Render ---
+    function renderStats() {
+      const container = document.getElementById('statsList');
+      if(!container) return;
+      const stats = (siteData.about && siteData.about.stats) || [];
+      container.innerHTML = stats.map((st, i) => `
+        <div class="form-group">
+          <label class="form-label">Stat #${i+1}</label>
+          <input type="text" class="form-control" value="${st.number}" onchange="updateStat(${i}, 'number', this.value)" style="margin-bottom:6px;">
+          <input type="text" class="form-control" value="${st.label}" onchange="updateStat(${i}, 'label', this.value)">
+        </div>
+      `).join('');
+    }
+
+    function updateStat(idx, key, val) {
+      siteData.about.stats[idx][key] = val;
+      updateSaveBadge(true);
+    }
+
+    // Collect latest form edits back into siteData
+    function syncFormsToData() {
+      if(!siteData) return;
+      siteData.company.name = document.getElementById('compName').value.trim();
+      siteData.company.tagline = document.getElementById('compTagline').value.trim();
+      siteData.company.email = document.getElementById('compEmail').value.trim();
+      siteData.company.phone = document.getElementById('compPhone').value.trim();
+      siteData.company.address = document.getElementById('compAddress').value.trim();
+      siteData.company.workingHours = document.getElementById('compHours').value.trim();
+      siteData.company.website = document.getElementById('compWebsite').value.trim();
+
+      siteData.company.social = siteData.company.social || {};
+      siteData.company.social.whatsapp = document.getElementById('socialWhatsapp').value.trim();
+      siteData.company.social.linkedin = document.getElementById('socialLinkedin').value.trim();
+      siteData.company.social.facebook = document.getElementById('socialFacebook').value.trim();
+      siteData.company.social.instagram = document.getElementById('socialInstagram').value.trim();
+
+      siteData.about.badge = document.getElementById('aboutBadge').value.trim();
+      siteData.about.heading = document.getElementById('aboutHeading').value.trim();
+      siteData.about.paragraph1 = document.getElementById('aboutP1').value.trim();
+      siteData.about.paragraph2 = document.getElementById('aboutP2').value.trim();
+    }
+
+    // --- GitHub & Save ---
+    function loadGitHubSettings() {
+      const owner = localStorage.getItem('nilkanth_gh_owner') || 'INAxDeveloper';
+      const repo = localStorage.getItem('nilkanth_gh_repo') || 'nilkanth-electromech';
+      const token = localStorage.getItem('nilkanth_gh_token') || '';
+      document.getElementById('ghOwner').value = owner;
+      document.getElementById('ghRepo').value = repo;
+      document.getElementById('ghToken').value = token;
+    }
+
+    function saveGitHubSettings() {
+      localStorage.setItem('nilkanth_gh_owner', document.getElementById('ghOwner').value.trim());
+      localStorage.setItem('nilkanth_gh_repo', document.getElementById('ghRepo').value.trim());
+      localStorage.setItem('nilkanth_gh_token', document.getElementById('ghToken').value.trim());
+    }
+
+    function toggleTokenVisibility() {
+      const inp = document.getElementById('ghToken');
+      const eye = document.getElementById('tokenEye');
+      if(inp.type === 'password') {
+        inp.type = 'text';
+        eye.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        inp.type = 'password';
+        eye.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    async function testGitHubConnection() {
+      saveGitHubSettings();
+      const owner = document.getElementById('ghOwner').value.trim();
+      const repo = document.getElementById('ghRepo').value.trim();
+      const token = document.getElementById('ghToken').value.trim();
+      if(!token) {
+        showToast('Please enter your GitHub token first', 'error');
+        return;
+      }
+      showToast('Testing GitHub connection...', 'info');
+      try {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if(res.ok) {
+          const data = await res.json();
+          showToast(`Connected to repository: ${data.full_name} (${data.visibility})`, 'success');
+        } else {
+          const err = await res.json();
+          showToast('Connection failed: ' + (err.message || 'Invalid token or repo'), 'error');
+        }
+      } catch (e) {
+        showToast('Network error: ' + e.message, 'error');
+      }
+    }
+
+    // Publish to GitHub
+    async function publishToGitHub() {
+      syncFormsToData();
+      saveGitHubSettings();
+
+      const owner = document.getElementById('ghOwner').value.trim();
+      const repo = document.getElementById('ghRepo').value.trim();
+      const token = document.getElementById('ghToken').value.trim();
+
+      if(!token) {
+        showToast('GitHub token required! Please configure it in GitHub Settings.', 'error');
+        switchTab('tab-github');
+        return;
+      }
+
+      const publishBtn = document.getElementById('btnPublish');
+      const originalText = publishBtn.innerHTML;
+      publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+      publishBtn.disabled = true;
+
+      try {
+        // Step 1: Get current file SHA of data/site-data.json
+        const filePath = 'data/site-data.json';
+        let sha = null;
+        const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if(getRes.ok) {
+          const fileInfo = await getRes.json();
+          sha = fileInfo.sha;
+        }
+
+        // Step 2: Commit updated JSON
+        const jsonContent = JSON.stringify(siteData, null, 2);
+        // UTF-8 to Base64
+        const utf8Bytes = new TextEncoder().encode(jsonContent);
+        let binaryStr = '';
+        utf8Bytes.forEach(b => binaryStr += String.fromCharCode(b));
+        const base64Content = btoa(binaryStr);
+
+        const putBody = {
+          message: 'Update website content via Admin Panel [' + new Date().toLocaleString() + ']',
+          content: base64Content,
+          branch: 'main'
+        };
+        if(sha) putBody.sha = sha;
+
+        const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(putBody)
+        });
+
+        if(!putRes.ok) {
+          const err = await putRes.json();
+          throw new Error(err.message || 'GitHub commit failed');
+        }
+
+        updateSaveBadge(false);
+        showToast('Published successfully! GitHub Pages will refresh in 30 seconds.', 'success');
+      } catch (err) {
+        showToast('Publish failed: ' + err.message, 'error');
+      } finally {
+        publishBtn.innerHTML = originalText;
+        publishBtn.disabled = false;
+      }
+    }
+
+    // Export JSON Backup
+    function exportBackup() {
+      syncFormsToData();
+      const blob = new Blob([JSON.stringify(siteData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `nilkanth-site-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Backup downloaded!', 'success');
+    }
+
+    function updateSaveBadge(unsaved) {
+      hasUnsavedChanges = unsaved;
+      const b = document.getElementById('saveBadge');
+      if(unsaved) {
+        b.className = 'status-badge unsaved';
+        b.innerHTML = '<i class="fas fa-exclamation-circle"></i> Unsaved Changes';
+      } else {
+        b.className = 'status-badge';
+        b.innerHTML = '<i class="fas fa-check-circle"></i> In Sync with GitHub';
+      }
+    }
+
+    function showToast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      const m = document.getElementById('toastMsg');
+      m.textContent = msg;
+      t.className = `toast show ${type}`;
+      setTimeout(() => { t.classList.remove('show'); }, 4000);
+    }
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      const targetPane = document.getElementById(tabId);
+      if(targetPane) targetPane.classList.add('active');
+      const targetNav = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+      if(targetNav) targetNav.classList.add('active');
+
+      const titles = {
+        'tab-overview': 'Dashboard Overview',
+        'tab-company': 'Company & Contact Info',
+        'tab-products': 'Electrical Panels & Products',
+        'tab-services': 'Services & Solutions',
+        'tab-about': 'About & Experience Stats',
+        'tab-github': 'GitHub Auto-Publish Settings'
+      };
+      document.getElementById('pageTitle').textContent = titles[tabId] || 'Dashboard';
+    }
+
+    // Listeners
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => switchTab(item.dataset.tab));
+    });
+
+    document.querySelectorAll('#tab-company input, #tab-about input, #tab-about textarea').forEach(el => {
+      el.addEventListener('input', () => updateSaveBadge(true));
+    });
+
+    document.getElementById('btnPublish').addEventListener('click', publishToGitHub);
+    document.getElementById('btnExport').addEventListener('click', exportBackup);
+
+    // Initial load
+    initData();
+  </script>
+</body>
+</html>

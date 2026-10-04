@@ -1,0 +1,143 @@
+{
+  "company": {
+    "name": "Nilkanth Electromech",
+    "tagline": "Transforming Power Distribution with Precision",
+    "email": "aurrointernational@gmail.com",
+    "phone": "+91 98765 43210",
+    "address": "Plot No. 12, GIDC Industrial Estate, Surat, Gujarat 395006, India",
+    "workingHours": "Monday - Saturday: 9:00 AM - 6:00 PM",
+    "website": "nilkanthelectromech.com",
+    "social": {
+      "facebook": "https://facebook.com",
+      "instagram": "https://instagram.com",
+      "linkedin": "https://linkedin.com",
+      "whatsapp": "https://wa.me/919876543210"
+    }
+  },
+  "hero": [
+    {
+      "id": "slide-1",
+      "badge": "14+ Years of Precision Engineering",
+      "title": "Innovative Electrical Panel Solutions",
+      "subtitle": "Transforming Power Distribution with Precision, Reliability and State-of-the-Art Technology",
+      "btnText": "View Products",
+      "btnLink": "products.html"
+    },
+    {
+      "id": "slide-2",
+      "badge": "Custom Manufacturing",
+      "title": "Quality Manufacturing & Precision Engineering",
+      "subtitle": "Surat's Premier Control & Distribution Panel Builders Serving Industrial & Commercial Clients",
+      "btnText": "Our Products",
+      "btnLink": "products.html"
+    },
+    {
+      "id": "slide-3",
+      "badge": "Full Lifecycle Service",
+      "title": "End-to-End Installation & Testing",
+      "subtitle": "From Fabrication to Commissioning, Retrofitting & Routine Maintenance",
+      "btnText": "Our Services",
+      "btnLink": "services.html"
+    }
+  ],
+  "about": {
+    "badge": "About Nilkanth Electromech",
+    "heading": "We Are Reliable Electrical Panel Builders in Surat",
+    "paragraph1": "Nilkanth Electromech is a premier manufacturing and service company in Surat, Gujarat. We specialize in designing, manufacturing, testing, and commissioning a full spectrum of electrical panels for industrial, commercial, and infrastructure applications.",
+    "paragraph2": "With over 14 years of industry experience, our dedicated team of engineers and technicians deliver customized power distribution solutions that maximize efficiency, safety, and operational continuity.",
+    "stats": [
+      { "number": "14+", "label": "Years Experience" },
+      { "number": "500+", "label": "Projects Completed" },
+      { "number": "100%", "label": "Client Satisfaction" },
+      { "number": "50+", "label": "Industrial Clients" }
+    ]
+  },
+  "products": [
+    {
+      "id": "mcc-panel",
+      "title": "MCC Panel",
+      "category": "Motor Control",
+      "image": "images/MCC_1-500x225.jpg",
+      "description": "Motor Control Centre panels for industrial motor management, automatic protection, and remote control systems."
+    },
+    {
+      "id": "pcc-panel",
+      "title": "PCC Panel",
+      "category": "Power Distribution",
+      "image": "images/PPC-Panel-500x375.jpeg",
+      "description": "Power Control Centre panels for main power distribution, circuit monitoring, and heavy industrial load control."
+    },
+    {
+      "id": "apfc-panel",
+      "title": "APFC Panel",
+      "category": "Energy Efficiency",
+      "image": "images/APFC_NEW_1-500x375.jpg",
+      "description": "Automatic Power Factor Correction panels for reducing reactive power losses and minimizing electricity utility penalties."
+    },
+    {
+      "id": "plc-panel",
+      "title": "PLC Panel",
+      "category": "Automation",
+      "image": "images/PLC_NEW_1-500x375.jpg",
+      "description": "Programmable Logic Controller automation panels designed for advanced industrial machinery and process control."
+    },
+    {
+      "id": "dg-sync-panel",
+      "title": "DG Sync Panel",
+      "category": "Synchronization",
+      "image": "images/DG-Sync_1-500x277.jpg",
+      "description": "Diesel Generator synchronisation panels for automated load sharing, parallel operation, and zero-break power transfer."
+    },
+    {
+      "id": "outdoor-lt-panel",
+      "title": "Outdoor LT Panel",
+      "category": "Distribution",
+      "image": "images/Outdoor-lt_1-500x375.jpg",
+      "description": "Weather-resistant outdoor Low Tension panels with IP55/65 enclosures for demanding exterior industrial environments."
+    }
+  ],
+  "services": [
+    {
+      "id": "fabrication-work",
+      "title": "Fabrication Work (Control Panel)",
+      "icon": "fas fa-tools",
+      "image": "images/fabrication_work-500x281.jpg",
+      "description": "Customized fabrication for control panels, modular enclosures, and industrial switchboards built to rigid engineering tolerances."
+    },
+    {
+      "id": "cable-laying",
+      "title": "H.V/L.V. Cable Laying",
+      "icon": "fas fa-network-wired",
+      "image": "images/cable_laying-500x281.jpg",
+      "description": "Comprehensive High Voltage (HV) and Low Voltage (LV) cabling solutions ensuring safe, certified transmission across facilities."
+    },
+    {
+      "id": "panel-commissioning",
+      "title": "L.T./H.T. Panel Commissioning",
+      "icon": "fas fa-cog",
+      "image": "images/s_3-500x281.jpg",
+      "description": "Systematic on-site commissioning to guarantee optimal calibration, relay coordination, and smooth system handover."
+    },
+    {
+      "id": "panel-installation",
+      "title": "L.T./H.T. Panel Installation",
+      "icon": "fas fa-wrench",
+      "image": "images/s_4-500x281.jpg",
+      "description": "Professional on-site mechanical and electrical installation by certified technicians following Indian electrical standards."
+    },
+    {
+      "id": "retro-fitting",
+      "title": "L.T. Panel Retro Fitting Jobs",
+      "icon": "fas fa-sync-alt",
+      "image": "images/s_5-500x281.jpg",
+      "description": "Modernizing legacy electrical panels with contemporary switchgear and digital meters, extending equipment lifespan at minimal cost."
+    },
+    {
+      "id": "panel-testing",
+      "title": "L.T./H.T. Panel Testing Jobs",
+      "icon": "fas fa-vial",
+      "image": "images/s_6-500x281.jpg",
+      "description": "Thorough insulation, high-voltage withstand, temperature rise, and functional testing to prevent downtime and hazards."
+    }
+  ]
+}

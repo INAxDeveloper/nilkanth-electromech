@@ -1,4 +1,4 @@
-﻿// ===== NILKANTH ELECTROMECH - MAIN JAVASCRIPT =====
+// ===== NILKANTH ELECTROMECH - MAIN JAVASCRIPT =====
 
 // --- Header scroll effect ---
 const header = document.getElementById('header');
@@ -137,18 +137,100 @@ if(contactForm){
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('.form-submit');
-    const original = btn.textContent;
-    btn.textContent = 'Sending...';
+    const original = btn.innerHTML;
+    btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
     btn.disabled = true;
     setTimeout(() => {
-      btn.textContent = 'Message Sent!';
+      btn.innerHTML = 'Message Sent! <i class="fas fa-check"></i>';
       btn.style.background = '#28a745';
       setTimeout(() => {
-        btn.textContent = original;
+        btn.innerHTML = original;
         btn.style.background = '';
         btn.disabled = false;
         contactForm.reset();
       }, 3000);
-    }, 1500);
+    }, 1200);
   });
 }
+
+// --- Dynamic Site Data Sync (Synchronizes with Admin Panel updates) ---
+(function loadDynamicSiteData() {
+  fetch('data/site-data.json?t=' + Date.now())
+    .then(res => {
+      if(!res.ok) throw new Error('No json');
+      return res.json();
+    })
+    .then(data => {
+      if(!data) return;
+
+      // Update Company info in Header / Footer / Contact
+      if(data.company) {
+        document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+          el.href = 'mailto:' + data.company.email;
+          if(el.textContent.includes('@')) el.childNodes.forEach(n => {
+            if(n.nodeType === 3 && n.textContent.includes('@')) n.textContent = ' ' + data.company.email;
+          });
+        });
+        document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+          el.href = 'tel:' + data.company.phone.replace(/[^0-9+]/g, '');
+        });
+        document.querySelectorAll('.footer-contact span, .contact-detail p').forEach(el => {
+          if(el.textContent.includes('Gujarat') || el.textContent.includes('Surat')) {
+            el.textContent = data.company.address;
+          }
+        });
+        if(data.company.social) {
+          const fb = document.querySelectorAll('a[aria-label="Facebook"], .footer-social a:nth-child(1)');
+          fb.forEach(a => { if(data.company.social.facebook) a.href = data.company.social.facebook; });
+          const ig = document.querySelectorAll('a[aria-label="Instagram"], .footer-social a:nth-child(2)');
+          ig.forEach(a => { if(data.company.social.instagram) a.href = data.company.social.instagram; });
+          const li = document.querySelectorAll('a[aria-label="LinkedIn"], .footer-social a:nth-child(3)');
+          li.forEach(a => { if(data.company.social.linkedin) a.href = data.company.social.linkedin; });
+          const wa = document.querySelectorAll('a[aria-label="WhatsApp"], .footer-social a:nth-child(4)');
+          wa.forEach(a => { if(data.company.social.whatsapp) a.href = data.company.social.whatsapp; });
+        }
+      }
+
+      // Update Products Page Grid if on products.html
+      const productsPageGrid = document.querySelector('.products-page-grid');
+      if(productsPageGrid && Array.isArray(data.products) && data.products.length > 0) {
+        productsPageGrid.innerHTML = data.products.map(p => `
+          <div class="product-page-card">
+            <div class="product-img">
+              <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='images/NE@2x.png'">
+              <div class="product-overlay"></div>
+            </div>
+            <div class="product-info">
+              <span class="product-category" style="display:inline-block;font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--primary,#0056b3);margin-bottom:6px;">${p.category || 'Electrical Panel'}</span>
+              <h3>${p.title}</h3>
+              <p>${p.description}</p>
+              <a href="contact.html?product=${encodeURIComponent(p.title)}" class="btn btn-primary btn-small">Enquire Now</a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Update Products Home Grid if on index.html
+      const homeProductsGrid = document.querySelector('.products-grid');
+      if(homeProductsGrid && Array.isArray(data.products) && data.products.length > 0) {
+        homeProductsGrid.innerHTML = data.products.slice(0, 6).map(p => `
+          <div class="product-card">
+            <div class="product-img">
+              <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='images/NE@2x.png'">
+              <div class="product-overlay">
+                <a href="products.html" class="btn btn-small">View Details</a>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>${p.title}</h3>
+              <p>${p.description}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    })
+    .catch(() => {
+      // Fallback: static HTML already in place
+    });
+})();
+
