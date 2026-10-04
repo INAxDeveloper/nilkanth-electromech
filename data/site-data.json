@@ -9,7 +9,7 @@
     "website": "nilkanthelectromech.com",
     "social": {
       "facebook": "https://facebook.com",
-      "instagram": "https://instagram.com",
+      "instagram": "https://www.instagram.com/quickbuy_fashion/",
       "linkedin": "https://linkedin.com",
       "whatsapp": "https://wa.me/919876543210"
     }
@@ -46,10 +46,22 @@
     "paragraph1": "Nilkanth Electromech is a premier manufacturing and service company in Surat, Gujarat. We specialize in designing, manufacturing, testing, and commissioning a full spectrum of electrical panels for industrial, commercial, and infrastructure applications.",
     "paragraph2": "With over 14 years of industry experience, our dedicated team of engineers and technicians deliver customized power distribution solutions that maximize efficiency, safety, and operational continuity.",
     "stats": [
-      { "number": "14+", "label": "Years Experience" },
-      { "number": "500+", "label": "Projects Completed" },
-      { "number": "100%", "label": "Client Satisfaction" },
-      { "number": "50+", "label": "Industrial Clients" }
+      {
+        "number": "14+",
+        "label": "Years Experience"
+      },
+      {
+        "number": "500+",
+        "label": "Projects Completed"
+      },
+      {
+        "number": "100%",
+        "label": "Client Satisfaction"
+      },
+      {
+        "number": "50+",
+        "label": "Industrial Clients"
+      }
     ]
   },
   "products": [
