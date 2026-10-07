@@ -38,7 +38,7 @@ Official website for **Nilkanth Electromech** — your premier choice for electr
 - No frameworks, no dependencies — fast & lightweight!
 
 ## Contact
-- **Email:** aurrointernational@gmail.com
+- **Email:** nilkanthelectromech@gmail.com
 - **Location:** Surat, Gujarat, India
 - **Website:** nilkanthelectromech.com
 
