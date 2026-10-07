@@ -131,65 +131,176 @@ if(revealEls.length > 0){
   });
 }
 
-// --- Contact form basic handling ---
+// --- Contact form WhatsApp direct submission ---
+let activeCompanyWhatsapp = '918469385282';
+
 const contactForm = document.getElementById('contactForm');
 if(contactForm){
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('.form-submit');
-    const original = btn.innerHTML;
-    btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
-    btn.disabled = true;
+    const original = btn ? btn.innerHTML : 'Send Message';
+    
+    // Extract input values
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const subjectInput = document.getElementById('subject');
+    const serviceInput = document.getElementById('service');
+    const messageInput = document.getElementById('message');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : 'Not provided';
+    const subject = subjectInput ? subjectInput.value.trim() : '';
+    const service = serviceInput && serviceInput.value ? serviceInput.value : 'General Enquiry';
+    const message = messageInput ? messageInput.value.trim() : '';
+
+    // Clean destination WhatsApp phone number
+    const targetDigits = (window.siteDataCompanyWhatsapp || activeCompanyWhatsapp).replace(/[^0-9]/g, '');
+    const cleanPhone = targetDigits || '918469385282';
+
+    // Build structured WhatsApp message
+    const waText = 
+`*New Enquiry - Nilkanth Electromech*
+━━━━━━━━━━━━━━━━━━━━
+👤 *Name:* ${name}
+📧 *Email:* ${email}
+📞 *Phone:* ${phone}
+📌 *Subject:* ${subject}
+⚙️ *Service Required:* ${service}
+
+💬 *Message:*
+${message}
+━━━━━━━━━━━━━━━━━━━━
+_Sent via website contact form_`;
+
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`;
+
+    if(btn){
+      btn.innerHTML = 'Connecting to WhatsApp... <i class="fab fa-whatsapp"></i>';
+      btn.style.background = '#25d366';
+      btn.disabled = true;
+    }
+
+    // Open WhatsApp in new tab / app
     setTimeout(() => {
-      btn.innerHTML = 'Message Sent! <i class="fas fa-check"></i>';
-      btn.style.background = '#28a745';
-      setTimeout(() => {
-        btn.innerHTML = original;
-        btn.style.background = '';
-        btn.disabled = false;
-        contactForm.reset();
-      }, 3000);
-    }, 1200);
+      window.open(waUrl, '_blank');
+      if(btn){
+        btn.innerHTML = 'Opened in WhatsApp! <i class="fas fa-check"></i>';
+        setTimeout(() => {
+          btn.innerHTML = original;
+          btn.style.background = '';
+          btn.disabled = false;
+          contactForm.reset();
+        }, 3000);
+      }
+    }, 400);
   });
 }
 
 // --- Dynamic Site Data Sync (Synchronizes with Admin Panel updates) ---
 (function loadDynamicSiteData() {
-  fetch('data/site-data.json?t=' + Date.now())
-    .then(res => {
-      if(!res.ok) throw new Error('No json');
-      return res.json();
-    })
-    .then(data => {
-      if(!data) return;
+  const fallbackData = {
+    company: {
+      email: "nilkanthelectromech@gmail.com",
+      phone: "+91 84693 85282",
+      address: "Plot No. 12, GIDC Industrial Estate, Surat, Gujarat 395006, India",
+      social: {
+        whatsapp: "https://wa.me/918469385282",
+        facebook: "",
+        instagram: "",
+        linkedin: "",
+        show_whatsapp: true,
+        show_facebook: false,
+        show_instagram: false,
+        show_linkedin: false
+      }
+    }
+  };
 
-      // Update Company info in Header / Footer / Contact
-      if(data.company) {
+  function applyData(data) {
+    if(!data) return;
+
+    // Update Company info in Header / Footer / Contact
+    if(data.company) {
+      if(data.company.email) {
         document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
           el.href = 'mailto:' + data.company.email;
           if(el.textContent.includes('@')) el.childNodes.forEach(n => {
             if(n.nodeType === 3 && n.textContent.includes('@')) n.textContent = ' ' + data.company.email;
           });
         });
+      }
+      if(data.company.phone) {
         document.querySelectorAll('a[href^="tel:"]').forEach(el => {
           el.href = 'tel:' + data.company.phone.replace(/[^0-9+]/g, '');
         });
+      }
+      if(data.company.address) {
         document.querySelectorAll('.footer-contact span, .contact-detail p').forEach(el => {
           if(el.textContent.includes('Gujarat') || el.textContent.includes('Surat')) {
             el.textContent = data.company.address;
           }
         });
-        if(data.company.social) {
-          const fb = document.querySelectorAll('a[aria-label="Facebook"], .footer-social a:nth-child(1)');
-          fb.forEach(a => { if(data.company.social.facebook) a.href = data.company.social.facebook; });
-          const ig = document.querySelectorAll('a[aria-label="Instagram"], .footer-social a:nth-child(2)');
-          ig.forEach(a => { if(data.company.social.instagram) a.href = data.company.social.instagram; });
-          const li = document.querySelectorAll('a[aria-label="LinkedIn"], .footer-social a:nth-child(3)');
-          li.forEach(a => { if(data.company.social.linkedin) a.href = data.company.social.linkedin; });
-          const wa = document.querySelectorAll('a[aria-label="WhatsApp"], .footer-social a:nth-child(4)');
-          wa.forEach(a => { if(data.company.social.whatsapp) a.href = data.company.social.whatsapp; });
+      }
+      if(data.company.social) {
+        const s = data.company.social;
+        const platforms = ['facebook', 'instagram', 'linkedin', 'whatsapp'];
+
+        platforms.forEach(p => {
+          const url = s[p];
+          const isShown = Boolean(s['show_' + p] === true && url && url !== '#' && url !== '');
+          const cap = p.charAt(0).toUpperCase() + p.slice(1);
+          const selector = `[data-social="${p}"], a[aria-label="${cap}"], a[href*="${p}"]`;
+
+          document.querySelectorAll(selector).forEach(el => {
+            if(el.classList.contains('floating-whatsapp')) return;
+            if(isShown) {
+              el.style.display = 'inline-flex';
+              el.href = url;
+            } else {
+              el.style.display = 'none';
+            }
+          });
+        });
+
+        // Toggle parent social wrapper if all icons hidden
+        document.querySelectorAll('.footer-social, .topbar-right').forEach(box => {
+          const visible = Array.from(box.querySelectorAll('a')).filter(a => a.style.display !== 'none');
+          box.style.display = visible.length > 0 ? '' : 'none';
+        });
+
+        if(s.whatsapp) {
+          window.siteDataCompanyWhatsapp = s.whatsapp;
         }
       }
+      if(!window.siteDataCompanyWhatsapp && data.company.phone) {
+        window.siteDataCompanyWhatsapp = data.company.phone;
+      }
+    }
+  }
+
+  // 1. Immediately apply fallback data so icons hide even without server
+  applyData(fallbackData);
+
+  // 2. Check localStorage (updates made in Admin panel are instant in same browser)
+  try {
+    const cached = localStorage.getItem('nilkanth_site_data');
+    if(cached) {
+      const parsed = JSON.parse(cached);
+      applyData(parsed);
+    }
+  } catch(e) {}
+
+  // 3. Fetch remote / current site-data.json
+  fetch('data/site-data.json?t=' + Date.now())
+    .then(res => res.ok ? res.json() : null)
+    .then(data => {
+      if(data) applyData(data);
+    })
+    .catch(() => {});
+})();
 
       // Update Products Page Grid if on products.html
       const productsPageGrid = document.querySelector('.products-page-grid');

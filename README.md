@@ -1,4 +1,4 @@
-﻿# Nilkanth Electromech - Official Website
+# Nilkanth Electromech - Official Website
 
 > **Power Up Your Future** | Premier Electrical Panel Manufacturer in Surat, Gujarat
 
@@ -39,8 +39,8 @@ Official website for **Nilkanth Electromech** — your premier choice for electr
 
 ## Contact
 - **Email:** nilkanthelectromech@gmail.com
+- **Phone / WhatsApp:** +91 84693 85282
 - **Location:** Surat, Gujarat, India
-- **Website:** nilkanthelectromech.com
 
 ---
 &copy; 2024 Nilkanth Electromech. All Rights Reserved.

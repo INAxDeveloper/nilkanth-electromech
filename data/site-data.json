@@ -2,6 +2,13 @@
   "company": {
     "name": "Nilkanth Electromech",
     "tagline": "Transforming Power Distribution with Precision",
+    "logo": "images/logo-emblem.png",
+    "logoFull": "images/logo-full.png",
+    "certifications": [
+      "\"CPRI\" Certified Switchboard Manufacturer",
+      "Gov. Approved Licence Electrical Contractor"
+    ],
+    "certificationText": "\"CPRI\" CERTIFIED SWITCHBOARD MANUFACTURER | GOV. APPROVED LICENCE ELECTRICAL CONTRACTOR",
     "email": "nilkanthelectromech@gmail.com",
     "phone": "+91 8469385282",
     "address": "Plot No.-33, road no-2, Panna House, Behind Mahadev Temple, Udhna, Surat",
@@ -11,13 +18,17 @@
       "facebook": "https://facebook.com",
       "instagram": "https://www.instagram.com/quickbuy_fashion/",
       "linkedin": "",
-      "whatsapp": "https://wa.me/8469385282"
+      "whatsapp": "https://wa.me/8469385282",
+      "show_facebook": false,
+      "show_instagram": false,
+      "show_linkedin": false,
+      "show_whatsapp": true
     }
   },
   "hero": [
     {
       "id": "slide-1",
-      "badge": "14+ Years of Precision Engineering",
+      "badge": "\"CPRI\" Certified Switchboard Manufacturer",
       "title": "Innovative Electrical Panel Solutions",
       "subtitle": "Transforming Power Distribution with Precision, Reliability and State-of-the-Art Technology",
       "btnText": "View Products",
@@ -25,7 +36,7 @@
     },
     {
       "id": "slide-2",
-      "badge": "Custom Manufacturing",
+      "badge": "Gov. Approved Licence Electrical Contractor",
       "title": "Quality Manufacturing & Precision Engineering",
       "subtitle": "Surat's Premier Control & Distribution Panel Builders Serving Industrial & Commercial Clients",
       "btnText": "Our Products",
@@ -33,7 +44,7 @@
     },
     {
       "id": "slide-3",
-      "badge": "Full Lifecycle Service",
+      "badge": "14+ Years of Precision Engineering",
       "title": "End-to-End Installation & Testing",
       "subtitle": "From Fabrication to Commissioning, Retrofitting & Routine Maintenance",
       "btnText": "Our Services",
@@ -42,9 +53,9 @@
   ],
   "about": {
     "badge": "About Nilkanth Electromech",
-    "heading": "We Are Reliable Electrical Panel Builders in Surat",
-    "paragraph1": "Nilkanth Electromech is a premier manufacturing and service company in Surat, Gujarat. We specialize in designing, manufacturing, testing, and commissioning a full spectrum of electrical panels for industrial, commercial, and infrastructure applications.",
-    "paragraph2": "With over 14 years of industry experience, our dedicated team of engineers and technicians deliver customized power distribution solutions that maximize efficiency, safety, and operational continuity.",
+    "heading": "CPRI Certified Switchboard Manufacturer & Gov. Approved Contractor",
+    "paragraph1": "Nilkanth Electromech is a premier \"CPRI\" Certified Switchboard Manufacturer and Government Approved Licensed Electrical Contractor based in Surat, Gujarat. We specialize in designing, manufacturing, testing, and commissioning a full spectrum of electrical panels for industrial, commercial, and infrastructure applications.",
+    "paragraph2": "With over 14 years of industry experience, our dedicated team of engineers and technicians deliver customized power distribution solutions that maximize efficiency, safety, and operational continuity, adhering to strict CPRI and IS standards.",
     "stats": [
       {
         "number": "14+",
