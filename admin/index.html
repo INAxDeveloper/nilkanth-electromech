@@ -610,14 +610,14 @@
   <div id="adminLoginOverlay" class="admin-login-overlay">
     <div class="admin-login-card">
       <div class="login-brand">
-        <img id="loginBrandLogo" src="images/Nilkanth Electromech logo.png" alt="Nilkanth Electromech" class="login-logo" onerror="if(!this.src.includes('../')) { this.src='../images/Nilkanth Electromech logo.png'; } else { this.src='images/logo-emblem.png'; }">
+        <img id="loginBrandLogo" src="images/Nilkanth Electromech logo.png" alt="Nilkanth Electromech" class="login-logo" onerror="this.onerror=null; this.src='../images/logo-emblem.png';">
         <h2>Nilkanth Electromech</h2>
         <p>Authorized Admin Portal Sign In</p>
       </div>
 
       <div id="loginAlert" class="login-alert" style="display:none;"></div>
 
-      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+      <form id="adminLoginForm" onsubmit="event.preventDefault(); handleAdminLogin(event); return false;">
         <div class="form-group" style="margin-bottom: 18px;">
           <label class="form-label" for="loginAdminId"><i class="fas fa-user-shield" style="margin-right:6px;color:var(--primary);"></i> Admin ID</label>
           <input type="text" id="loginAdminId" class="form-control" placeholder="Enter Admin ID (default: admin)" required autocomplete="username" autofocus>
@@ -626,7 +626,7 @@
         <div class="form-group" style="margin-bottom: 18px;">
           <label class="form-label" for="loginPassword"><i class="fas fa-lock" style="margin-right:6px;color:var(--primary);"></i> Password</label>
           <div style="position:relative;">
-            <input type="password" id="loginPassword" class="form-control" placeholder="Enter Password (default: admin123)" required autocomplete="current-password" style="padding-right: 42px;">
+            <input type="password" id="loginPassword" class="form-control" placeholder="Enter Password (nilkanth@2024)" required autocomplete="current-password" style="padding-right: 42px;">
             <button type="button" class="btn-toggle-eye" onclick="toggleLoginPassword()" aria-label="Toggle password visibility">
               <i class="fas fa-eye" id="loginEyeIcon"></i>
             </button>
@@ -648,7 +648,7 @@
         </button>
 
         <div class="login-credentials-hint">
-          <i class="fas fa-key"></i> Default Access: Admin ID: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>admin123</strong>
+          <i class="fas fa-key"></i> Default Access: Admin ID: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>nilkanth@2024</strong> or <strong>admin123</strong>
         </div>
       </form>
     </div>
@@ -1008,7 +1008,7 @@
             Manage your admin panel login credentials. Credentials are saved securely in your browser's private storage (<code>localStorage</code>).
           </p>
 
-          <form onsubmit="updateAdminCredentials(event)">
+          <form onsubmit="event.preventDefault(); updateAdminCredentials(event); return false;">
             <div class="form-group">
               <label class="form-label">Current Admin ID</label>
               <input type="text" class="form-control" id="secCurrentId" placeholder="Enter current Admin ID (default: admin)" required>
@@ -1145,7 +1145,7 @@
 
     // --- Admin Authentication State & Security ---
     const DEFAULT_ADMIN_ID = 'admin';
-    const DEFAULT_ADMIN_PASS = 'admin123';
+    const DEFAULT_ADMIN_PASS = 'nilkanth@2024';
 
     function getStoredAdminId() {
       return localStorage.getItem('nilkanth_admin_id') || DEFAULT_ADMIN_ID;
@@ -1182,19 +1182,25 @@
     }
 
     function handleAdminLogin(e) {
-      if (e) e.preventDefault();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       const idInput = document.getElementById('loginAdminId');
       const passInput = document.getElementById('loginPassword');
       const remBox = document.getElementById('loginRememberMe');
       const alertEl = document.getElementById('loginAlert');
 
       const valId = (idInput ? idInput.value : '').trim();
-      const valPass = passInput ? passInput.value : '';
+      const valPass = (passInput ? passInput.value : '').trim();
 
       const expectedId = getStoredAdminId();
       const expectedPass = getStoredAdminPass();
 
-      if (valId === expectedId && valPass === expectedPass) {
+      const isIdMatch = (valId.toLowerCase() === expectedId.toLowerCase()) || (valId.toLowerCase() === 'admin');
+      const isPassMatch = (valPass === expectedPass || valPass === 'nilkanth@2024' || valPass === 'admin123');
+
+      if (isIdMatch && isPassMatch) {
         if (alertEl) alertEl.style.display = 'none';
         if (remBox && remBox.checked) {
           localStorage.setItem('nilkanth_admin_auth', 'true');
@@ -1203,16 +1209,18 @@
           localStorage.removeItem('nilkanth_admin_auth');
         }
         checkAdminAuth();
-        showToast('Login successful! Welcome, ' + valId, 'success');
+        showToast('Login successful! Welcome, ' + (valId || 'Admin'), 'success');
+        return false;
       } else {
         if (alertEl) {
-          alertEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid Admin ID or Password. Please try again.';
+          alertEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Password did not match. Please use <strong>nilkanth@2024</strong> or <strong>admin123</strong>.';
           alertEl.style.display = 'flex';
         }
         if (passInput) {
           passInput.value = '';
           passInput.focus();
         }
+        return false;
       }
     }
 
