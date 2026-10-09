@@ -491,12 +491,24 @@
       text-align: center;
       margin-bottom: 26px;
     }
+    .login-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 10px;
+      margin: 0 auto 14px auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 20px rgba(37, 99, 235, 0.25);
+    }
     .login-logo {
-      max-height: 56px;
-      max-width: 220px;
+      max-height: 100%;
+      max-width: 100%;
       object-fit: contain;
-      margin-bottom: 14px;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
     }
     .login-brand h2 {
       font-size: 1.35rem;
@@ -610,7 +622,9 @@
   <div id="adminLoginOverlay" class="admin-login-overlay">
     <div class="admin-login-card">
       <div class="login-brand">
-        <img id="loginBrandLogo" src="images/Nilkanth Electromech logo.png" alt="Nilkanth Electromech" class="login-logo" onerror="this.onerror=null; this.src='../images/logo-emblem.png';">
+        <div class="login-logo-wrap">
+          <img id="loginBrandLogo" src="images/logo-emblem.png" alt="Nilkanth Electromech" class="login-logo" onerror="this.onerror=null; this.src='../images/logo-emblem.png';">
+        </div>
         <h2>Nilkanth Electromech</h2>
         <p>Authorized Admin Portal Sign In</p>
       </div>
@@ -660,7 +674,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <img src="images/NE@2x.png" alt="Nilkanth Logo" class="sidebar-logo" onerror="if(!this.src.includes('../')) { this.src='../images/NE@2x.png'; }">
+        <img src="images/NE@2x.png" alt="Nilkanth Logo" class="sidebar-logo" onerror="this.onerror=null; this.src='../images/NE@2x.png';">
         <div class="sidebar-title">
           <h2>Nilkanth</h2>
           <span>Admin Panel</span>
@@ -1137,7 +1151,20 @@
     // Synchronize logo images and navigation links
     const brandLogoEl = document.getElementById('loginBrandLogo');
     if (brandLogoEl) {
-      brandLogoEl.src = basePath + 'images/Nilkanth Electromech logo.png';
+      brandLogoEl.onerror = function() {
+        this.onerror = null;
+        this.src = isSubfolder ? '../images/NE@2x.png' : 'images/NE@2x.png';
+      };
+      brandLogoEl.src = isSubfolder ? '../images/logo-emblem.png' : 'images/logo-emblem.png';
+    }
+
+    const sideLogoEl = document.querySelector('.sidebar-logo');
+    if (sideLogoEl) {
+      sideLogoEl.onerror = function() {
+        this.onerror = null;
+        this.src = isSubfolder ? '../images/logo-emblem.png' : 'images/logo-emblem.png';
+      };
+      sideLogoEl.src = isSubfolder ? '../images/NE@2x.png' : 'images/NE@2x.png';
     }
     document.querySelectorAll('a.btn-live, a.link-live-site').forEach(el => {
       el.href = basePath ? (basePath + 'index.html') : 'index.html';
