@@ -26,32 +26,59 @@ if(hamburger && nav){
   });
 }
 
-// --- Hero Slider ---
-const slides = document.querySelectorAll('.hero-slide');
-const dots = document.querySelectorAll('.dot');
-let heroIndex = 0, heroTimer;
+// --- Hero Automatic Slider ---
+let heroIndex = 0, heroTimer = null;
+function setupHeroSlider(){
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.dot');
+  if(!slides.length) return;
 
-function showSlide(idx){
-  slides.forEach(s => s.classList.remove('active'));
-  dots.forEach(d => d.classList.remove('active'));
-  heroIndex = (idx + slides.length) % slides.length;
-  if(slides[heroIndex]) slides[heroIndex].classList.add('active');
-  if(dots[heroIndex]) dots[heroIndex].classList.add('active');
-}
+  if(heroTimer) {
+    clearInterval(heroTimer);
+    heroTimer = null;
+  }
 
-function startHeroTimer(){
-  clearInterval(heroTimer);
-  heroTimer = setInterval(() => showSlide(heroIndex + 1), 5000);
-}
+  function showSlide(idx){
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    heroIndex = (idx + slides.length) % slides.length;
+    if(slides[heroIndex]) slides[heroIndex].classList.add('active');
+    if(dots[heroIndex]) dots[heroIndex].classList.add('active');
+  }
 
-if(slides.length > 0){
-  const prevBtn = document.getElementById('heroPrev');
-  const nextBtn = document.getElementById('heroNext');
-  if(prevBtn) prevBtn.addEventListener('click', () => { showSlide(heroIndex - 1); startHeroTimer(); });
-  if(nextBtn) nextBtn.addEventListener('click', () => { showSlide(heroIndex + 1); startHeroTimer(); });
-  dots.forEach(d => d.addEventListener('click', () => { showSlide(+d.dataset.index); startHeroTimer(); }));
+  function startHeroTimer(){
+    if(heroTimer) clearInterval(heroTimer);
+    if(slides.length > 1){
+      heroTimer = setInterval(() => {
+        showSlide(heroIndex + 1);
+      }, 4000); // Auto-slides smoothly every 4 seconds
+    }
+  }
+
+  // Dots click handler
+  dots.forEach(d => {
+    d.onclick = () => {
+      showSlide(+d.dataset.index);
+      startHeroTimer();
+    };
+  });
+
+  // Pause on hover, resume on leave
+  const heroEl = document.getElementById('hero');
+  if(heroEl){
+    heroEl.onmouseenter = () => { if(heroTimer) clearInterval(heroTimer); };
+    heroEl.onmouseleave = () => { startHeroTimer(); };
+  }
+
+  // Ensure active class on slide 0 if none active
+  if(!document.querySelector('.hero-slide.active') && slides[0]){
+    slides[0].classList.add('active');
+    if(dots[0]) dots[0].classList.add('active');
+  }
+
   startHeroTimer();
 }
+setupHeroSlider();
 
 // --- Counter animation ---
 function animateCount(el){
@@ -76,26 +103,36 @@ if(counters.length > 0){
 }
 
 // --- Testimonial Slider ---
-const tCards = document.querySelectorAll('.testimonial-card');
-const tDots = document.querySelectorAll('.t-dot');
 let tIndex = 0, tTimer;
+function setupTestimonialSlider(){
+  const tCards = document.querySelectorAll('.testimonial-card');
+  const tDots = document.querySelectorAll('.t-dot');
+  if(!tCards.length) return;
+  clearInterval(tTimer);
 
-function showTestimonial(idx){
-  tCards.forEach(c => c.classList.remove('active'));
-  tDots.forEach(d => d.classList.remove('active'));
-  tIndex = (idx + tCards.length) % tCards.length;
-  if(tCards[tIndex]) tCards[tIndex].classList.add('active');
-  if(tDots[tIndex]) tDots[tIndex].classList.add('active');
-}
+  function showTestimonial(idx){
+    tCards.forEach(c => c.classList.remove('active'));
+    tDots.forEach(d => d.classList.remove('active'));
+    tIndex = (idx + tCards.length) % tCards.length;
+    if(tCards[tIndex]) tCards[tIndex].classList.add('active');
+    if(tDots[tIndex]) tDots[tIndex].classList.add('active');
+  }
 
-if(tCards.length > 0){
   const tPrev = document.getElementById('tPrev');
   const tNext = document.getElementById('tNext');
-  if(tPrev) tPrev.addEventListener('click', () => { showTestimonial(tIndex - 1); });
-  if(tNext) tNext.addEventListener('click', () => { showTestimonial(tIndex + 1); });
-  tDots.forEach(d => d.addEventListener('click', () => showTestimonial(+d.dataset.t)));
-  tTimer = setInterval(() => showTestimonial(tIndex + 1), 5000);
+  if(tPrev) tPrev.onclick = () => { showTestimonial(tIndex - 1); resetTTimer(); };
+  if(tNext) tNext.onclick = () => { showTestimonial(tIndex + 1); resetTTimer(); };
+  tDots.forEach(d => {
+    d.onclick = () => { showTestimonial(+d.dataset.t); resetTTimer(); };
+  });
+
+  function resetTTimer(){
+    clearInterval(tTimer);
+    tTimer = setInterval(() => showTestimonial(tIndex + 1), 5000);
+  }
+  resetTTimer();
 }
+setupTestimonialSlider();
 
 // --- Scroll to top ---
 const scrollTopBtn = document.getElementById('scrollTop');
@@ -275,13 +312,118 @@ _Sent via website contact form_`;
           window.siteDataCompanyWhatsapp = s.whatsapp;
         }
       }
-      if(!window.siteDataCompanyWhatsapp && data.company.phone) {
+      if(!window.siteDataCompanyWhatsapp && data.company && data.company.phone) {
         window.siteDataCompanyWhatsapp = data.company.phone;
       }
     }
+
+    // Update Products Page Grid if on products.html
+    const productsPageGrid = document.querySelector('.products-page-grid');
+    if(productsPageGrid && Array.isArray(data.products) && data.products.length > 0) {
+      productsPageGrid.innerHTML = data.products.map(p => `
+        <div class="product-page-card">
+          <div class="product-img">
+            <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='images/logo-full.png'">
+            <div class="product-overlay"></div>
+          </div>
+          <div class="product-info">
+            <span class="product-category" style="display:inline-block;font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--primary,#0056b3);margin-bottom:6px;">${p.category || 'Electrical Panel'}</span>
+            <h3>${p.title}</h3>
+            <p>${p.description}</p>
+            <a href="contact.html?product=${encodeURIComponent(p.title)}" class="btn btn-primary btn-small">Enquire Now</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update Products Home Grid if on index.html
+    const homeProductsGrid = document.querySelector('.products-grid');
+    if(homeProductsGrid && Array.isArray(data.products) && data.products.length > 0) {
+      homeProductsGrid.innerHTML = data.products.slice(0, 6).map(p => `
+        <div class="product-card">
+          <div class="product-img">
+            <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='images/logo-full.png'">
+            <div class="product-overlay">
+              <a href="products.html" class="btn btn-small">View Details</a>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>${p.title}</h3>
+            <p>${p.description}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update Hero Slides on index.html if on homepage and data.hero exists
+    const heroSlidesWrap = document.querySelector('.hero-slides');
+    if(heroSlidesWrap && Array.isArray(data.hero) && data.hero.length > 0) {
+      const defaultImages = [
+        'images/APFC_NEW_2-1200x675.jpg',
+        'images/MCC_1-1200x541.jpg',
+        'images/fabrication_work-1200x675.jpg'
+      ];
+      heroSlidesWrap.innerHTML = data.hero.map((slide, i) => `
+        <div class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image:url('${slide.image || defaultImages[i % defaultImages.length]}')">
+          <div class="hero-overlay"></div>
+          <div class="hero-content container">
+            ${slide.badge ? `<span class="hero-tag">${slide.badge}</span>` : ''}
+            <h1>${(slide.title || '').replace(/\n/g, '<br>')}</h1>
+            <p>${slide.subtitle || ''}</p>
+            <div class="hero-btns">
+              ${slide.btnText ? `<a href="${slide.btnLink || 'products.html'}" class="btn btn-primary">${slide.btnText}</a>` : ''}
+              ${slide.btnSecondaryText ? `<a href="${slide.btnSecondaryLink || 'contact.html'}" class="btn btn-outline-white">${slide.btnSecondaryText}</a>` : ''}
+            </div>
+            ${i === 0 ? `
+            <div class="hero-trust-badges">
+              <div class="trust-badge-item"><i class="fas fa-certificate"></i> "CPRI" Certified Switchboard Manufacturer</div>
+              <div class="trust-badge-item"><i class="fas fa-stamp"></i> Gov. Approved Licence Electrical Contractor</div>
+              <div class="trust-badge-item"><i class="fas fa-shield-alt"></i> 100% Quality &amp; Safety Tested</div>
+            </div>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      const heroDotsWrap = document.getElementById('heroDots');
+      if(heroDotsWrap) {
+        heroDotsWrap.innerHTML = data.hero.map((_, i) => `
+          <span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
+        `).join('');
+      }
+
+      setupHeroSlider();
+    }
+
+    // Update Testimonials / Trust Our Clients on index.html
+    const tWrapper = document.querySelector('.testimonial-wrapper');
+    if(tWrapper && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
+      tWrapper.innerHTML = `
+        ${data.testimonials.map((t, idx) => `
+          <div class="testimonial-card ${idx === 0 ? 'active' : ''}" id="tCard${idx}">
+            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+            <p>"${t.quote}"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar"><i class="fas fa-user"></i></div>
+              <div><strong>${t.name}</strong><span>${t.role}</span></div>
+            </div>
+            <div class="stars">
+              ${Array.from({length: t.rating || 5}).map(() => '<i class="fas fa-star"></i>').join('')}
+            </div>
+          </div>
+        `).join('')}
+        <div class="t-nav">
+          <button id="tPrev" aria-label="Previous Review"><i class="fas fa-chevron-left"></i></button>
+          <div class="testimonial-dots">
+            ${data.testimonials.map((_, idx) => `<span class="t-dot ${idx === 0 ? 'active' : ''}" data-t="${idx}"></span>`).join('')}
+          </div>
+          <button id="tNext" aria-label="Next Review"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      `;
+      setupTestimonialSlider();
+    }
   }
 
-  // 1. Immediately apply fallback data so icons hide even without server
+  // 1. Immediately apply fallback data
   applyData(fallbackData);
 
   // 2. Check localStorage (updates made in Admin panel are instant in same browser)
@@ -300,48 +442,5 @@ _Sent via website contact form_`;
       if(data) applyData(data);
     })
     .catch(() => {});
-})();
-
-      // Update Products Page Grid if on products.html
-      const productsPageGrid = document.querySelector('.products-page-grid');
-      if(productsPageGrid && Array.isArray(data.products) && data.products.length > 0) {
-        productsPageGrid.innerHTML = data.products.map(p => `
-          <div class="product-page-card">
-            <div class="product-img">
-              <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='images/NE@2x.png'">
-              <div class="product-overlay"></div>
-            </div>
-            <div class="product-info">
-              <span class="product-category" style="display:inline-block;font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--primary,#0056b3);margin-bottom:6px;">${p.category || 'Electrical Panel'}</span>
-              <h3>${p.title}</h3>
-              <p>${p.description}</p>
-              <a href="contact.html?product=${encodeURIComponent(p.title)}" class="btn btn-primary btn-small">Enquire Now</a>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      // Update Products Home Grid if on index.html
-      const homeProductsGrid = document.querySelector('.products-grid');
-      if(homeProductsGrid && Array.isArray(data.products) && data.products.length > 0) {
-        homeProductsGrid.innerHTML = data.products.slice(0, 6).map(p => `
-          <div class="product-card">
-            <div class="product-img">
-              <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='images/NE@2x.png'">
-              <div class="product-overlay">
-                <a href="products.html" class="btn btn-small">View Details</a>
-              </div>
-            </div>
-            <div class="product-info">
-              <h3>${p.title}</h3>
-              <p>${p.description}</p>
-            </div>
-          </div>
-        `).join('');
-      }
-    })
-    .catch(() => {
-      // Fallback: static HTML already in place
-    });
 })();
 

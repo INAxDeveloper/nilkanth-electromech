@@ -47,19 +47,21 @@
       z-index: 100;
     }
     .sidebar-header {
-      padding: 24px 20px;
+      padding: 18px 14px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
       border-bottom: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.02);
     }
     .sidebar-logo {
-      width: 40px;
-      height: 40px;
+      height: 42px;
+      max-width: 100%;
       border-radius: 8px;
       background: white;
-      padding: 4px;
+      padding: 5px 12px;
       object-fit: contain;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
     .sidebar-title h2 {
       font-size: 1rem;
@@ -495,20 +497,19 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 76px;
-      height: 76px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 10px;
-      margin: 0 auto 14px auto;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 20px rgba(37, 99, 235, 0.25);
+      width: auto;
+      max-width: 280px;
+      height: 60px;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 6px 18px;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
     .login-logo {
-      max-height: 100%;
+      max-height: 46px;
       max-width: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
     }
     .login-brand h2 {
       font-size: 1.35rem;
@@ -607,12 +608,29 @@
       color: #fff;
     }
 
+    .menu-toggle {
+      display: none;
+    }
+
     /* Responsive */
     @media(max-width: 900px) {
-      .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
-      .sidebar.open { transform: translateX(0); }
-      .main-wrap { margin-left: 0; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .menu-toggle {
+        display: inline-flex !important;
+      }
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-wrap {
+        margin-left: 0;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -623,7 +641,7 @@
     <div class="admin-login-card">
       <div class="login-brand">
         <div class="login-logo-wrap">
-          <img id="loginBrandLogo" src="images/logo-emblem.png" alt="Nilkanth Electromech" class="login-logo" onerror="this.onerror=null; this.src='../images/logo-emblem.png';">
+          <img id="loginBrandLogo" src="images/logo-full.png" alt="Nilkanth Electromech" class="login-logo" onerror="this.onerror=null; this.src='../images/logo-full.png';">
         </div>
         <h2>Nilkanth Electromech</h2>
         <p>Authorized Admin Portal Sign In</p>
@@ -674,16 +692,15 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <img src="images/NE@2x.png" alt="Nilkanth Logo" class="sidebar-logo" onerror="this.onerror=null; this.src='../images/NE@2x.png';">
-        <div class="sidebar-title">
-          <h2>Nilkanth</h2>
-          <span>Admin Panel</span>
-        </div>
+        <img src="images/logo-full.png" alt="Nilkanth Electromech" class="sidebar-logo" onerror="this.onerror=null; this.src='../images/logo-full.png';">
       </div>
       <ul class="sidebar-nav">
         <div class="nav-label">Navigation</div>
         <li class="nav-item active" data-tab="tab-overview">
           <i class="fas fa-chart-pie"></i> Overview
+        </li>
+        <li class="nav-item" data-tab="tab-slider">
+          <i class="fas fa-images"></i> Slider Manager
         </li>
         <li class="nav-item" data-tab="tab-company">
           <i class="fas fa-building"></i> Company & Contact
@@ -696,6 +713,9 @@
         </li>
         <li class="nav-item" data-tab="tab-about">
           <i class="fas fa-info-circle"></i> About & Stats
+        </li>
+        <li class="nav-item" data-tab="tab-testimonials">
+          <i class="fas fa-comments"></i> Trust Our Clients
         </li>
         <div class="nav-label">Configuration</div>
         <li class="nav-item" data-tab="tab-github">
@@ -727,7 +747,7 @@
       <!-- Top Bar -->
       <header class="topbar">
         <div class="topbar-left">
-          <button id="menuToggle" class="btn btn-secondary" style="display:none;padding:8px 12px;"><i class="fas fa-bars"></i></button>
+          <button id="menuToggle" class="btn btn-secondary menu-toggle" style="padding:8px 12px;" aria-label="Toggle Navigation Menu"><i class="fas fa-bars"></i></button>
           <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
           <div class="status-badge" id="saveBadge">
             <i class="fas fa-check-circle"></i> In Sync
@@ -753,6 +773,13 @@
       <section class="tab-pane active" id="tab-overview">
         <div class="grid-4" style="margin-bottom:24px;">
           <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-images"></i></div>
+            <div class="stat-meta">
+              <h3 id="statSliderCount">3</h3>
+              <p>Slider Images</p>
+            </div>
+          </div>
+          <div class="stat-card">
             <div class="stat-icon blue"><i class="fas fa-bolt"></i></div>
             <div class="stat-meta">
               <h3 id="statProductCount">6</h3>
@@ -773,13 +800,6 @@
               <p>Hosting on GitHub</p>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon purple"><i class="fas fa-code-branch"></i></div>
-            <div class="stat-meta">
-              <h3>main</h3>
-              <p>Active Branch</p>
-            </div>
-          </div>
         </div>
 
         <div class="grid-2">
@@ -788,6 +808,12 @@
               <h3 class="card-title"><i class="fas fa-rocket"></i> Quick Actions</h3>
             </div>
             <div style="display:flex;flex-direction:column;gap:12px;">
+              <button class="btn btn-secondary" onclick="switchTab('tab-slider'); openSlideModal();" style="justify-content:flex-start;">
+                <i class="fas fa-images" style="color:#c084fc;"></i> Add New Slider Image
+              </button>
+              <button class="btn btn-secondary" onclick="switchTab('tab-testimonials'); openTestimonialModal();" style="justify-content:flex-start;">
+                <i class="fas fa-comment-medical" style="color:#fbbf24;"></i> Add New Client Review
+              </button>
               <button class="btn btn-secondary" onclick="switchTab('tab-products'); openProductModal();" style="justify-content:flex-start;">
                 <i class="fas fa-plus-circle" style="color:var(--primary);"></i> Add New Electrical Panel
               </button>
@@ -910,6 +936,24 @@
         </div>
       </section>
 
+      <!-- Tab: Slider / Images -->
+      <section class="tab-pane" id="tab-slider">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-images"></i> Hero Banner Slider Images</h3>
+            <button class="btn btn-primary btn-sm" onclick="openSlideModal()">
+              <i class="fas fa-plus"></i> Add New Slide Image
+            </button>
+          </div>
+          <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;line-height:1.6;">
+            Manage and add background photos and banner slides for your home page hero carousel. Upload new images, choose from gallery presets, and adjust slide titles and action buttons.
+          </p>
+          <div class="item-grid" id="sliderList">
+            <!-- Dynamic slider cards -->
+          </div>
+        </div>
+      </section>
+
       <!-- Tab: Products -->
       <section class="tab-pane" id="tab-products">
         <div class="card">
@@ -970,6 +1014,24 @@
           </div>
           <div class="grid-4" id="statsList">
             <!-- Dynamic stats fields -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Testimonials / Trust Our Clients -->
+      <section class="tab-pane" id="tab-testimonials">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-comments"></i> Trust Our Clients (Client Reviews)</h3>
+            <button class="btn btn-primary btn-sm" onclick="openTestimonialModal()">
+              <i class="fas fa-plus"></i> Add New Client Review
+            </button>
+          </div>
+          <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;line-height:1.6;">
+            Manage and add client testimonials displayed in the <strong>"Trust Our Clients"</strong> section on the website homepage. You can add client names, roles/companies, star ratings, and review quotes.
+          </p>
+          <div class="item-grid" id="testimonialsList">
+            <!-- Dynamic testimonial cards -->
           </div>
         </div>
       </section>
@@ -1067,6 +1129,105 @@
   </div>
 </div><!-- /adminAppWrap -->
 
+  <!-- Slide Modal -->
+  <div class="modal-overlay" id="slideModal">
+    <div class="modal" style="max-width:620px;">
+      <div class="modal-header">
+        <h3 id="slideModalTitle">Add New Slide Image</h3>
+        <button class="modal-close" onclick="closeSlideModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="slideEditId">
+
+        <!-- Image Preview Box -->
+        <div class="form-group">
+          <label class="form-label">Image Preview</label>
+          <div style="width:100%;height:180px;background:#0b1120;border:1px solid var(--border-color);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+            <img id="slideImgPreview" src="images/APFC_NEW_2-1200x675.jpg" alt="Preview" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='images/logo-full.png'">
+          </div>
+        </div>
+
+        <!-- Upload from Computer -->
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-upload"></i> Upload Image from Computer</label>
+          <input type="file" id="slideFileInput" accept="image/*" class="form-control" onchange="handleSlideFileUpload(event)" style="padding:8px 12px;">
+          <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">
+            Select any JPG, PNG, or WebP photo from your device. It will be loaded instantly into the slider.
+          </small>
+        </div>
+
+        <!-- Or select from preset repository images -->
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-folder-open"></i> Or Choose from Existing Gallery</label>
+          <select class="form-control" id="slidePresetSelect" onchange="selectSlidePreset(this.value)">
+            <option value="">-- Choose Existing Banner Image --</option>
+            <option value="images/APFC_NEW_2-1200x675.jpg">APFC Panel 2 (1200x675)</option>
+            <option value="images/APFC_NEW_1-1200x675.jpg">APFC Panel 1 (1200x675)</option>
+            <option value="images/MCC_1-1200x541.jpg">MCC Control Panel (1200x541)</option>
+            <option value="images/fabrication_work-1200x675.jpg">Fabrication Workshop (1200x675)</option>
+            <option value="images/Outdoor-lt_1-1200x675.jpg">Outdoor LT Panel (1200x675)</option>
+            <option value="images/PLC_NEW_1-1200x675.jpg">PLC Automation Panel (1200x675)</option>
+            <option value="images/DG-Sync_1-1144x500.jpg">DG Synchronization Panel (1144x500)</option>
+            <option value="images/PPC-Panel-1200x675.jpeg">PCC Power Panel (1200x675)</option>
+            <option value="images/s_3-1200x675.jpg">Panel Commissioning (1200x675)</option>
+            <option value="images/s_4-1200x675.jpg">Panel Installation (1200x675)</option>
+            <option value="images/s_5-1200x675.jpg">Retro Fitting Jobs (1200x675)</option>
+            <option value="images/s_6-1200x675.jpg">Panel Testing (1200x675)</option>
+          </select>
+        </div>
+
+        <!-- Image Path / URL -->
+        <div class="form-group">
+          <label class="form-label">Image Path or URL</label>
+          <input type="text" class="form-control" id="slideImage" placeholder="images/APFC_NEW_2-1200x675.jpg" oninput="updateSlidePreview(this.value)">
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Badge / Category Tag</label>
+            <input type="text" class="form-control" id="slideBadge" placeholder="e.g. Premier Electrical Panel Builder">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Slide Heading / Title</label>
+            <input type="text" class="form-control" id="slideTitle" placeholder="e.g. Powering Efficiency">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Subtitle / Description</label>
+          <textarea class="form-control" id="slideSubtitle" placeholder="Brief description displayed on the banner slide..." style="min-height:70px;"></textarea>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Primary Button Text</label>
+            <input type="text" class="form-control" id="slideBtnText" placeholder="e.g. View Products">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary Button Link</label>
+            <input type="text" class="form-control" id="slideBtnLink" placeholder="products.html">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Secondary Button Text</label>
+            <input type="text" class="form-control" id="slideBtnSecText" placeholder="e.g. Get a Quote">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Secondary Button Link</label>
+            <input type="text" class="form-control" id="slideBtnSecLink" placeholder="contact.html">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeSlideModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSlide()">Save Slide Image</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Product Modal -->
   <div class="modal-overlay" id="productModal">
     <div class="modal">
@@ -1136,6 +1297,45 @@
     </div>
   </div>
 
+  <!-- Testimonial Modal -->
+  <div class="modal-overlay" id="testimonialModal">
+    <div class="modal" style="max-width:560px;">
+      <div class="modal-header">
+        <h3 id="testimonialModalTitle">Add Client Review</h3>
+        <button class="modal-close" onclick="closeTestimonialModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="testiEditId">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Client / Author Name</label>
+            <input type="text" class="form-control" id="testiName" placeholder="e.g. Ramesh Patel">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role / Company / City</label>
+            <input type="text" class="form-control" id="testiRole" placeholder="e.g. Director, Surat Textiles">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Star Rating</label>
+          <select class="form-control" id="testiRating">
+            <option value="5">★★★★★ (5 Stars - Excellent)</option>
+            <option value="4">★★★★☆ (4 Stars - Very Good)</option>
+            <option value="3">★★★☆☆ (3 Stars - Good)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Client Review Quote</label>
+          <textarea class="form-control" id="testiQuote" placeholder="Enter what the client said about your electrical panels or services..." style="min-height:110px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeTestimonialModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveTestimonial()">Save Client Review</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="toast" id="toast">
     <i class="fas fa-info-circle"></i>
@@ -1153,18 +1353,18 @@
     if (brandLogoEl) {
       brandLogoEl.onerror = function() {
         this.onerror = null;
-        this.src = isSubfolder ? '../images/NE@2x.png' : 'images/NE@2x.png';
+        this.src = isSubfolder ? '../images/logo-full.png' : 'images/logo-full.png';
       };
-      brandLogoEl.src = isSubfolder ? '../images/logo-emblem.png' : 'images/logo-emblem.png';
+      brandLogoEl.src = isSubfolder ? '../images/logo-full.png' : 'images/logo-full.png';
     }
 
     const sideLogoEl = document.querySelector('.sidebar-logo');
     if (sideLogoEl) {
       sideLogoEl.onerror = function() {
         this.onerror = null;
-        this.src = isSubfolder ? '../images/logo-emblem.png' : 'images/logo-emblem.png';
+        this.src = isSubfolder ? '../images/logo-full.png' : 'images/logo-full.png';
       };
-      sideLogoEl.src = isSubfolder ? '../images/NE@2x.png' : 'images/NE@2x.png';
+      sideLogoEl.src = isSubfolder ? '../images/logo-full.png' : 'images/logo-full.png';
     }
     document.querySelectorAll('a.btn-live, a.link-live-site').forEach(el => {
       el.href = basePath ? (basePath + 'index.html') : 'index.html';
@@ -1378,6 +1578,11 @@
                 { number: "24/7", label: "Technical Support" }
               ]
             },
+            hero: [
+              { id: "slide-1", image: "images/APFC_NEW_2-1200x675.jpg", badge: "Premier Electrical Panel Builder", title: "Powering Efficiency,\nEmpowering Industries", subtitle: "Your trusted partner for comprehensive panel building solutions. L.T., H.T. & APFC panels designed with precision and excellence.", btnText: "View Products", btnLink: "products.html", btnSecondaryText: "Get a Quote", btnSecondaryLink: "contact.html" },
+              { id: "slide-2", image: "images/MCC_1-1200x541.jpg", badge: "Quality Products", title: "Quality Products for\nEfficient Panel Building", subtitle: "From small-scale control panels to large industrial installations, we provide reliable innovative solutions.", btnText: "Our Products", btnLink: "products.html", btnSecondaryText: "Learn More", btnSecondaryLink: "about.html" },
+              { id: "slide-3", image: "images/fabrication_work-1200x675.jpg", badge: "Professional Services", title: "Powering Your Electrical\nInfrastructure", subtitle: "Professional panel building services from fabrication and installation to commissioning and testing.", btnText: "Our Services", btnLink: "services.html", btnSecondaryText: "Contact Us", btnSecondaryLink: "contact.html" }
+            ],
             products: [
               { id: "mcc-panel", title: "MCC Panel (Motor Control Centre)", category: "Motor & Automation", image: "images/MCC_1-500x225.jpg", description: "Modular Motor Control Centre engineered for industrial automation, high thermal withstand, and multi-motor management." },
               { id: "pcc-panel", title: "PCC Panel (Power Control Centre)", category: "Power Distribution", image: "images/PPC-Panel-500x375.jpeg", description: "Heavy-duty Power Control Centre panels up to 6300A with compartmentalized construction and copper busbar grading." },
@@ -1393,14 +1598,35 @@
               { id: "panel-installation", title: "L.T./H.T. Panel Installation", icon: "fas fa-wrench", image: "images/s_4-1200x675.jpg", description: "Professional mechanical and electrical installation by government licensed technicians ensuring safety and seismic stability." },
               { id: "retro-fitting", title: "L.T. Panel Retro Fitting Jobs", icon: "fas fa-sync-alt", image: "images/s_5-1200x675.jpg", description: "Modernizing legacy electrical switchboards with contemporary breakers and digital meters, extending equipment lifespan." },
               { id: "panel-testing", title: "L.T./H.T. Panel Testing Jobs", icon: "fas fa-vial", image: "images/s_6-1200x675.jpg", description: "Thorough insulation resistance, high-voltage withstand, dielectric strength, and functional testing matching CPRI standards." }
+            ],
+            testimonials: [
+              { id: "t-1", name: "Happy Client", role: "Panel Buyer, Surat", quote: "Very good quality panel manufacturer. I personally very impressed to work with Nilkanth Electromech.", rating: 5 },
+              { id: "t-2", name: "Industrial Client", role: "Manufacturing, Gujarat", quote: "Nilkanth Electromech is one of the best panel manufacturers in Surat and the services they provide are amazing. Keep it up and work like this!", rating: 5 },
+              { id: "t-3", name: "Satisfied Customer", role: "Commercial Project, Surat", quote: "Excellent craftsmanship and professional services. Nilkanth Electromech delivered our APFC panels on time with perfect quality. Highly recommended!", rating: 5 }
             ]
           };
         }
       }
+      if(!siteData.hero || !Array.isArray(siteData.hero) || siteData.hero.length === 0) {
+        siteData.hero = [
+          { id: "slide-1", image: "images/APFC_NEW_2-1200x675.jpg", badge: "Premier Electrical Panel Builder", title: "Powering Efficiency,\nEmpowering Industries", subtitle: "Your trusted partner for comprehensive panel building solutions. L.T., H.T. & APFC panels designed with precision and excellence.", btnText: "View Products", btnLink: "products.html", btnSecondaryText: "Get a Quote", btnSecondaryLink: "contact.html" },
+          { id: "slide-2", image: "images/MCC_1-1200x541.jpg", badge: "Quality Products", title: "Quality Products for\nEfficient Panel Building", subtitle: "From small-scale control panels to large industrial installations, we provide reliable innovative solutions.", btnText: "Our Products", btnLink: "products.html", btnSecondaryText: "Learn More", btnSecondaryLink: "about.html" },
+          { id: "slide-3", image: "images/fabrication_work-1200x675.jpg", badge: "Professional Services", title: "Powering Your Electrical\nInfrastructure", subtitle: "Professional panel building services from fabrication and installation to commissioning and testing.", btnText: "Our Services", btnLink: "services.html", btnSecondaryText: "Contact Us", btnSecondaryLink: "contact.html" }
+        ];
+      }
+      if(!siteData.testimonials || !Array.isArray(siteData.testimonials) || siteData.testimonials.length === 0) {
+        siteData.testimonials = [
+          { id: "t-1", name: "Happy Client", role: "Panel Buyer, Surat", quote: "Very good quality panel manufacturer. I personally very impressed to work with Nilkanth Electromech.", rating: 5 },
+          { id: "t-2", name: "Industrial Client", role: "Manufacturing, Gujarat", quote: "Nilkanth Electromech is one of the best panel manufacturers in Surat and the services they provide are amazing. Keep it up and work like this!", rating: 5 },
+          { id: "t-3", name: "Satisfied Customer", role: "Commercial Project, Surat", quote: "Excellent craftsmanship and professional services. Nilkanth Electromech delivered our APFC panels on time with perfect quality. Highly recommended!", rating: 5 }
+        ];
+      }
       populateForms();
+      renderSlider();
       renderProducts();
       renderServices();
       renderStats();
+      renderTestimonials();
       loadGitHubSettings();
       updateSaveBadge(false);
     }
@@ -1437,6 +1663,188 @@
       document.getElementById('statServiceCount').textContent = (siteData.services || []).length;
     }
 
+    // --- Slider Manager ---
+    function renderSlider() {
+      const container = document.getElementById('sliderList');
+      if(!container) return;
+      if(!Array.isArray(siteData.hero)) siteData.hero = [];
+      const slides = siteData.hero;
+      const statEl = document.getElementById('statSliderCount');
+      if(statEl) statEl.textContent = slides.length;
+
+      if(!slides.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;">No slider images added yet. Click "Add New Slide Image" above to add your first banner image.</p>';
+        return;
+      }
+
+      container.innerHTML = slides.map((s, idx) => {
+        let imgSrc = s.image || 'images/APFC_NEW_2-1200x675.jpg';
+        if(!imgSrc.startsWith('http') && !imgSrc.startsWith('data:')) {
+          imgSrc = basePath + imgSrc;
+        }
+        return `
+        <div class="item-card">
+          <div style="position:relative;">
+            <img src="${imgSrc}" alt="${s.title || 'Slide'}" class="item-img" style="height:175px;" onerror="this.src='${basePath}images/logo-full.png'">
+            <span style="position:absolute;top:10px;left:10px;background:rgba(15,23,42,0.85);backdrop-filter:blur(4px);color:#38bdf8;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;border:1px solid rgba(56,189,248,0.3);">
+              Slide #${idx + 1}
+            </span>
+          </div>
+          <div class="item-body">
+            <span class="item-cat">${s.badge || 'Banner Tag'}</span>
+            <h4 class="item-title">${(s.title || 'Untitled Slide').replace(/\\n/g, ' ')}</h4>
+            <p class="item-desc">${s.subtitle || ''}</p>
+            <div style="margin-top:auto;display:flex;gap:6px;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border-color);">
+              <div style="display:flex;gap:4px;">
+                <button class="btn btn-secondary btn-sm" onclick="moveSlide(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move Up">
+                  <i class="fas fa-arrow-up"></i>
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="moveSlide(${idx}, 1)" ${idx === slides.length - 1 ? 'disabled' : ''} title="Move Down">
+                  <i class="fas fa-arrow-down"></i>
+                </button>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary btn-sm" onclick="editSlide(${idx})">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteSlide(${idx})">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+      }).join('');
+    }
+
+    function openSlideModal(idx = null) {
+      document.getElementById('slideEditId').value = idx !== null ? idx : '';
+      const presetSel = document.getElementById('slidePresetSelect');
+      if(presetSel) presetSel.value = '';
+      const fileInp = document.getElementById('slideFileInput');
+      if(fileInp) fileInp.value = '';
+
+      if(idx !== null && siteData.hero && siteData.hero[idx]) {
+        const s = siteData.hero[idx];
+        document.getElementById('slideModalTitle').textContent = 'Edit Slide Image';
+        document.getElementById('slideImage').value = s.image || '';
+        document.getElementById('slideBadge').value = s.badge || '';
+        document.getElementById('slideTitle').value = s.title || '';
+        document.getElementById('slideSubtitle').value = s.subtitle || '';
+        document.getElementById('slideBtnText').value = s.btnText || '';
+        document.getElementById('slideBtnLink').value = s.btnLink || '';
+        document.getElementById('slideBtnSecText').value = s.btnSecondaryText || '';
+        document.getElementById('slideBtnSecLink').value = s.btnSecondaryLink || '';
+        updateSlidePreview(s.image || 'images/APFC_NEW_2-1200x675.jpg');
+      } else {
+        document.getElementById('slideModalTitle').textContent = 'Add New Slide Image';
+        document.getElementById('slideImage').value = 'images/APFC_NEW_2-1200x675.jpg';
+        document.getElementById('slideBadge').value = 'New Banner';
+        document.getElementById('slideTitle').value = '';
+        document.getElementById('slideSubtitle').value = '';
+        document.getElementById('slideBtnText').value = 'View Products';
+        document.getElementById('slideBtnLink').value = 'products.html';
+        document.getElementById('slideBtnSecText').value = 'Get a Quote';
+        document.getElementById('slideBtnSecLink').value = 'contact.html';
+        updateSlidePreview('images/APFC_NEW_2-1200x675.jpg');
+      }
+      document.getElementById('slideModal').classList.add('active');
+    }
+
+    function closeSlideModal() {
+      document.getElementById('slideModal').classList.remove('active');
+    }
+
+    function updateSlidePreview(src) {
+      const img = document.getElementById('slideImgPreview');
+      if(!img) return;
+      if(!src) {
+        img.src = basePath + 'images/logo-full.png';
+        return;
+      }
+      img.src = (src.startsWith('http') || src.startsWith('data:')) ? src : (basePath + src);
+    }
+
+    function selectSlidePreset(val) {
+      if(!val) return;
+      document.getElementById('slideImage').value = val;
+      updateSlidePreview(val);
+    }
+
+    function handleSlideFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if(!file) return;
+      if(file.size > 2 * 1024 * 1024) {
+        if(!confirm('Image is over 2MB. For optimal performance, images under 1MB are recommended. Continue anyway?')) {
+          event.target.value = '';
+          return;
+        }
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        document.getElementById('slideImage').value = dataUrl;
+        updateSlidePreview(dataUrl);
+        showToast('Image loaded successfully!', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveSlide() {
+      const image = document.getElementById('slideImage').value.trim();
+      if(!image) { alert('Please choose or upload a slide image'); return; }
+      const badge = document.getElementById('slideBadge').value.trim();
+      const title = document.getElementById('slideTitle').value.trim();
+      const subtitle = document.getElementById('slideSubtitle').value.trim();
+      const btnText = document.getElementById('slideBtnText').value.trim();
+      const btnLink = document.getElementById('slideBtnLink').value.trim();
+      const btnSecondaryText = document.getElementById('slideBtnSecText').value.trim();
+      const btnSecondaryLink = document.getElementById('slideBtnSecLink').value.trim();
+      const editId = document.getElementById('slideEditId').value;
+
+      if(!Array.isArray(siteData.hero)) siteData.hero = [];
+
+      if(editId !== '') {
+        const idx = parseInt(editId);
+        siteData.hero[idx] = {
+          ...siteData.hero[idx],
+          image, badge, title, subtitle, btnText, btnLink, btnSecondaryText, btnSecondaryLink
+        };
+      } else {
+        const id = 'slide-' + (siteData.hero.length + 1);
+        siteData.hero.push({
+          id, image, badge, title, subtitle, btnText, btnLink, btnSecondaryText, btnSecondaryLink
+        });
+      }
+
+      closeSlideModal();
+      renderSlider();
+      updateSaveBadge(true);
+      showToast('Slider updated! Remember to click "Save & Publish" to commit changes.', 'success');
+    }
+
+    function editSlide(idx) { openSlideModal(idx); }
+
+    function deleteSlide(idx) {
+      if(!confirm('Are you sure you want to delete slide #' + (idx + 1) + '?')) return;
+      siteData.hero.splice(idx, 1);
+      renderSlider();
+      updateSaveBadge(true);
+      showToast('Slide deleted', 'success');
+    }
+
+    function moveSlide(idx, direction) {
+      const targetIdx = idx + direction;
+      if(targetIdx < 0 || targetIdx >= siteData.hero.length) return;
+      const temp = siteData.hero[idx];
+      siteData.hero[idx] = siteData.hero[targetIdx];
+      siteData.hero[targetIdx] = temp;
+      renderSlider();
+      updateSaveBadge(true);
+      showToast('Slide order updated', 'info');
+    }
+
     // --- Products ---
     function renderProducts() {
       const container = document.getElementById('productsList');
@@ -1447,7 +1855,7 @@
         const imgSrc = p.image.startsWith('http') ? p.image : (basePath + p.image);
         return `
         <div class="item-card">
-          <img src="${imgSrc}" alt="${p.title}" class="item-img" onerror="this.src='${basePath}images/NE@2x.png'">
+          <img src="${imgSrc}" alt="${p.title}" class="item-img" onerror="this.src='${basePath}images/logo-full.png'">
           <div class="item-body">
             <span class="item-cat">${p.category || 'Panel'}</span>
             <h4 class="item-title">${p.title}</h4>
@@ -1620,6 +2028,132 @@
     function updateStat(idx, key, val) {
       siteData.about.stats[idx][key] = val;
       updateSaveBadge(true);
+    }
+
+    // --- Trust Our Clients / Testimonials ---
+    function renderTestimonials() {
+      const container = document.getElementById('testimonialsList');
+      if(!container) return;
+      if(!Array.isArray(siteData.testimonials)) siteData.testimonials = [];
+      const list = siteData.testimonials;
+
+      if(!list.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;">No client reviews added yet. Click "Add New Client Review" above to add your first testimonial.</p>';
+        return;
+      }
+
+      container.innerHTML = list.map((t, idx) => {
+        const starsHtml = Array.from({length: t.rating || 5}).map(() => '<i class="fas fa-star" style="color:#fbbf24;"></i>').join('');
+        return `
+        <div class="item-card">
+          <div class="item-body" style="padding:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <span class="item-cat" style="margin-bottom:0;"><i class="fas fa-quote-left"></i> Review #${idx + 1}</span>
+              <div style="font-size:0.85rem;">${starsHtml}</div>
+            </div>
+            <p style="font-size:0.92rem;color:#e2e8f0;font-style:italic;line-height:1.6;margin-bottom:16px;">
+              "${t.quote}"
+            </p>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <div style="width:38px;height:38px;background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#60a5fa;font-size:0.95rem;flex-shrink:0;">
+                <i class="fas fa-user"></i>
+              </div>
+              <div>
+                <strong style="display:block;color:#fff;font-size:0.95rem;">${t.name}</strong>
+                <span style="display:block;color:var(--text-muted);font-size:0.78rem;">${t.role}</span>
+              </div>
+            </div>
+            <div style="margin-top:auto;display:flex;gap:6px;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border-color);">
+              <div style="display:flex;gap:4px;">
+                <button class="btn btn-secondary btn-sm" onclick="moveTestimonial(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move Up">
+                  <i class="fas fa-arrow-up"></i>
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="moveTestimonial(${idx}, 1)" ${idx === list.length - 1 ? 'disabled' : ''} title="Move Down">
+                  <i class="fas fa-arrow-down"></i>
+                </button>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary btn-sm" onclick="editTestimonial(${idx})">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteTestimonial(${idx})">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+      }).join('');
+    }
+
+    function openTestimonialModal(idx = null) {
+      document.getElementById('testiEditId').value = idx !== null ? idx : '';
+      if(idx !== null && siteData.testimonials && siteData.testimonials[idx]) {
+        const t = siteData.testimonials[idx];
+        document.getElementById('testimonialModalTitle').textContent = 'Edit Client Review';
+        document.getElementById('testiName').value = t.name || '';
+        document.getElementById('testiRole').value = t.role || '';
+        document.getElementById('testiRating').value = t.rating || 5;
+        document.getElementById('testiQuote').value = t.quote || '';
+      } else {
+        document.getElementById('testimonialModalTitle').textContent = 'Add Client Review';
+        document.getElementById('testiName').value = '';
+        document.getElementById('testiRole').value = '';
+        document.getElementById('testiRating').value = '5';
+        document.getElementById('testiQuote').value = '';
+      }
+      document.getElementById('testimonialModal').classList.add('active');
+    }
+
+    function closeTestimonialModal() {
+      document.getElementById('testimonialModal').classList.remove('active');
+    }
+
+    function saveTestimonial() {
+      const name = document.getElementById('testiName').value.trim();
+      const quote = document.getElementById('testiQuote').value.trim();
+      if(!name) { alert('Please enter client / author name'); return; }
+      if(!quote) { alert('Please enter review quote'); return; }
+      const role = document.getElementById('testiRole').value.trim() || 'Client';
+      const rating = parseInt(document.getElementById('testiRating').value) || 5;
+      const editId = document.getElementById('testiEditId').value;
+
+      if(!Array.isArray(siteData.testimonials)) siteData.testimonials = [];
+
+      if(editId !== '') {
+        const idx = parseInt(editId);
+        siteData.testimonials[idx] = { ...siteData.testimonials[idx], name, role, rating, quote };
+      } else {
+        const id = 't-' + (siteData.testimonials.length + 1);
+        siteData.testimonials.push({ id, name, role, rating, quote });
+      }
+
+      closeTestimonialModal();
+      renderTestimonials();
+      updateSaveBadge(true);
+      showToast('Client review updated! Click "Save & Publish" to commit changes.', 'success');
+    }
+
+    function editTestimonial(idx) { openTestimonialModal(idx); }
+
+    function deleteTestimonial(idx) {
+      if(!confirm('Are you sure you want to delete review by "' + siteData.testimonials[idx].name + '"?')) return;
+      siteData.testimonials.splice(idx, 1);
+      renderTestimonials();
+      updateSaveBadge(true);
+      showToast('Client review deleted', 'success');
+    }
+
+    function moveTestimonial(idx, direction) {
+      const targetIdx = idx + direction;
+      if(targetIdx < 0 || targetIdx >= siteData.testimonials.length) return;
+      const temp = siteData.testimonials[idx];
+      siteData.testimonials[idx] = siteData.testimonials[targetIdx];
+      siteData.testimonials[targetIdx] = temp;
+      renderTestimonials();
+      updateSaveBadge(true);
+      showToast('Review order updated', 'info');
     }
 
     // Collect latest form edits back into siteData
@@ -1797,6 +2331,10 @@
 
     function updateSaveBadge(unsaved) {
       hasUnsavedChanges = unsaved;
+      if(unsaved) {
+        syncFormsToData();
+        persistLocalData();
+      }
       const b = document.getElementById('saveBadge');
       if(unsaved) {
         b.className = 'status-badge unsaved';
@@ -1826,19 +2364,41 @@
 
       const titles = {
         'tab-overview': 'Dashboard Overview',
+        'tab-slider': 'Hero Banner Slider Images',
         'tab-company': 'Company & Contact Info',
         'tab-products': 'Electrical Panels & Products',
         'tab-services': 'Services & Solutions',
         'tab-about': 'About & Experience Stats',
+        'tab-testimonials': 'Trust Our Clients (Reviews)',
         'tab-github': 'GitHub Auto-Publish Settings',
         'tab-security': 'Admin Login & Security Settings'
       };
       document.getElementById('pageTitle').textContent = titles[tabId] || 'Dashboard';
     }
 
-    // Listeners
+    // Mobile / Responsive Sidebar Drawer Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (menuToggle && sidebar) {
+      menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+          sidebar.classList.remove('open');
+        }
+      });
+    }
+
+    // Navigation Listeners
     document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', () => switchTab(item.dataset.tab));
+      item.addEventListener('click', () => {
+        switchTab(item.dataset.tab);
+        if (sidebar && window.innerWidth <= 900) {
+          sidebar.classList.remove('open');
+        }
+      });
     });
 
     document.querySelectorAll('#tab-company input, #tab-about input, #tab-about textarea').forEach(el => {

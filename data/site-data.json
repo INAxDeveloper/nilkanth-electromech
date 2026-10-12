@@ -2,7 +2,7 @@
   "company": {
     "name": "Nilkanth Electromech",
     "tagline": "Transforming Power Distribution with Precision",
-    "logo": "images/logo-emblem.png",
+    "logo": "images/logo-full.png",
     "logoFull": "images/logo-full.png",
     "certifications": [
       "\"CPRI\" Certified Switchboard Manufacturer",
@@ -28,27 +28,36 @@
   "hero": [
     {
       "id": "slide-1",
-      "badge": "\"CPRI\" Certified Switchboard Manufacturer",
-      "title": "Innovative Electrical Panel Solutions",
-      "subtitle": "Transforming Power Distribution with Precision, Reliability and State-of-the-Art Technology",
+      "image": "images/APFC_NEW_2-1200x675.jpg",
+      "badge": "Premier Electrical Panel Builder",
+      "title": "Powering Efficiency,\nEmpowering Industries",
+      "subtitle": "Your trusted partner for comprehensive panel building solutions. L.T., H.T. & APFC panels designed with precision and excellence.",
       "btnText": "View Products",
-      "btnLink": "products.html"
+      "btnLink": "products.html",
+      "btnSecondaryText": "Get a Quote",
+      "btnSecondaryLink": "contact.html"
     },
     {
       "id": "slide-2",
-      "badge": "Gov. Approved Licence Electrical Contractor",
-      "title": "Quality Manufacturing & Precision Engineering",
-      "subtitle": "Surat's Premier Control & Distribution Panel Builders Serving Industrial & Commercial Clients",
+      "image": "images/MCC_1-1200x541.jpg",
+      "badge": "Quality Products",
+      "title": "Quality Products for\nEfficient Panel Building",
+      "subtitle": "From small-scale control panels to large industrial installations, we provide reliable innovative solutions.",
       "btnText": "Our Products",
-      "btnLink": "products.html"
+      "btnLink": "products.html",
+      "btnSecondaryText": "Learn More",
+      "btnSecondaryLink": "about.html"
     },
     {
       "id": "slide-3",
-      "badge": "14+ Years of Precision Engineering",
-      "title": "End-to-End Installation & Testing",
-      "subtitle": "From Fabrication to Commissioning, Retrofitting & Routine Maintenance",
+      "image": "images/fabrication_work-1200x675.jpg",
+      "badge": "Professional Services",
+      "title": "Powering Your Electrical\nInfrastructure",
+      "subtitle": "Professional panel building services from fabrication and installation to commissioning and testing.",
       "btnText": "Our Services",
-      "btnLink": "services.html"
+      "btnLink": "services.html",
+      "btnSecondaryText": "Contact Us",
+      "btnSecondaryLink": "contact.html"
     }
   ],
   "about": {
@@ -161,6 +170,29 @@
       "icon": "fas fa-vial",
       "image": "images/s_6-500x281.jpg",
       "description": "Thorough insulation, high-voltage withstand, temperature rise, and functional testing to prevent downtime and hazards."
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t-1",
+      "name": "Happy Client",
+      "role": "Panel Buyer, Surat",
+      "quote": "Very good quality panel manufacturer. I personally very impressed to work with Nilkanth Electromech.",
+      "rating": 5
+    },
+    {
+      "id": "t-2",
+      "name": "Industrial Client",
+      "role": "Manufacturing, Gujarat",
+      "quote": "Nilkanth Electromech is one of the best panel manufacturers in Surat and the services they provide are amazing. Keep it up and work like this!",
+      "rating": 5
+    },
+    {
+      "id": "t-3",
+      "name": "Satisfied Customer",
+      "role": "Commercial Project, Surat",
+      "quote": "Excellent craftsmanship and professional services. Nilkanth Electromech delivered our APFC panels on time with perfect quality. Highly recommended!",
+      "rating": 5
     }
   ]
 }
