@@ -848,6 +848,50 @@
 
       <!-- Tab: Company Info -->
       <section class="tab-pane" id="tab-company">
+        <!-- Website Logo & Branding Card -->
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-image"></i> Website Official Logo</h3>
+            <span style="font-size:0.78rem;background:rgba(56,189,248,0.15);color:var(--primary);padding:3px 10px;border-radius:20px;font-weight:600;">Sitewide Branding</span>
+          </div>
+          <p style="color:var(--text-muted);font-size:0.86rem;margin-bottom:18px;line-height:1.5;">
+            Upload a new logo image from your device or specify an image URL. Changing this updates your logo across the entire website and admin panel.
+          </p>
+
+          <div class="grid-2" style="align-items: center; gap: 24px;">
+            <!-- Current Logo Preview Box -->
+            <div>
+              <label class="form-label">Current Logo Preview</label>
+              <div style="background:#0b1120;border:1px solid var(--border-color);border-radius:10px;padding:20px;display:flex;align-items:center;justify-content:center;min-height:100px;">
+                <div style="background:#ffffff;padding:8px 20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.3);display:inline-flex;align-items:center;justify-content:center;">
+                  <img id="adminLogoPreview" src="images/logo-full.png" alt="Current Logo" style="max-height:48px;max-width:240px;object-fit:contain;" onerror="this.src='images/logo-full.png'">
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload & Input Controls -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label"><i class="fas fa-upload"></i> Upload Logo from Computer</label>
+                <input type="file" id="logoFileInput" accept="image/*" class="form-control" onchange="handleLogoUpload(event)" style="padding:8px 12px;">
+                <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">
+                  PNG or SVG with transparent background recommended (horizontal banner format).
+                </small>
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Or Image Path / URL</label>
+                <div style="display:flex;gap:8px;">
+                  <input type="text" class="form-control" id="compLogo" placeholder="images/logo-full.png" oninput="updateLogoPreview(this.value)">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetDefaultLogo()" title="Reset to Default Logo" style="white-space:nowrap;">
+                    <i class="fas fa-undo"></i> Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-header">
             <h3 class="card-title"><i class="fas fa-building"></i> Company Information</h3>
@@ -1652,6 +1696,11 @@
       document.getElementById('showLinkedin').checked = !!s.show_linkedin;
       document.getElementById('showFacebook').checked = !!s.show_facebook;
       document.getElementById('showInstagram').checked = !!s.show_instagram;
+      // Logo
+      const logoVal = c.logo || c.logoFull || 'images/logo-full.png';
+      const compLogoInput = document.getElementById('compLogo');
+      if(compLogoInput) compLogoInput.value = logoVal;
+      updateLogoPreview(logoVal);
       // About
       const a = siteData.about || {};
       document.getElementById('aboutBadge').value = a.badge || '';
@@ -1661,6 +1710,66 @@
       // Overview stats
       document.getElementById('statProductCount').textContent = (siteData.products || []).length;
       document.getElementById('statServiceCount').textContent = (siteData.services || []).length;
+    }
+
+    // --- Website Official Logo Manager ---
+    function updateLogoPreview(src) {
+      const prev = document.getElementById('adminLogoPreview');
+      if(!prev) return;
+      if(!src) {
+        prev.src = basePath + 'images/logo-full.png';
+        return;
+      }
+      prev.src = (src.startsWith('http') || src.startsWith('data:')) ? src : (basePath + src);
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if(!file) return;
+      if(file.size > 2 * 1024 * 1024) {
+        if(!confirm('Logo image is over 2MB. For optimal web performance, images under 1MB are recommended. Continue anyway?')) {
+          event.target.value = '';
+          return;
+        }
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        document.getElementById('compLogo').value = dataUrl;
+        updateLogoPreview(dataUrl);
+        if(!siteData.company) siteData.company = {};
+        siteData.company.logo = dataUrl;
+        siteData.company.logoFull = dataUrl;
+
+        // Immediately update preview on login and sidebar in admin panel
+        const brandLogoEl = document.getElementById('loginBrandLogo');
+        if(brandLogoEl) brandLogoEl.src = dataUrl;
+        const sideLogoEl = document.querySelector('.sidebar-logo');
+        if(sideLogoEl) sideLogoEl.src = dataUrl;
+
+        updateSaveBadge(true);
+        showToast('New logo loaded! Click "Save & Publish" to deploy.', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetDefaultLogo() {
+      const defaultLogo = 'images/logo-full.png';
+      document.getElementById('compLogo').value = defaultLogo;
+      const fileInp = document.getElementById('logoFileInput');
+      if(fileInp) fileInp.value = '';
+      updateLogoPreview(defaultLogo);
+      if(!siteData.company) siteData.company = {};
+      siteData.company.logo = defaultLogo;
+      siteData.company.logoFull = defaultLogo;
+
+      const brandLogoEl = document.getElementById('loginBrandLogo');
+      if(brandLogoEl) brandLogoEl.src = basePath + defaultLogo;
+      const sideLogoEl = document.querySelector('.sidebar-logo');
+      if(sideLogoEl) sideLogoEl.src = basePath + defaultLogo;
+
+      updateSaveBadge(true);
+      showToast('Logo reset to default!', 'info');
     }
 
     // --- Slider Manager ---
@@ -2177,6 +2286,12 @@
       siteData.company.social.show_facebook = document.getElementById('showFacebook').checked;
       siteData.company.social.show_instagram = document.getElementById('showInstagram').checked;
 
+      const logoInp = document.getElementById('compLogo');
+      if(logoInp && logoInp.value.trim()) {
+        siteData.company.logo = logoInp.value.trim();
+        siteData.company.logoFull = logoInp.value.trim();
+      }
+
       siteData.about.badge = document.getElementById('aboutBadge').value.trim();
       siteData.about.heading = document.getElementById('aboutHeading').value.trim();
       siteData.about.paragraph1 = document.getElementById('aboutP1').value.trim();
@@ -2261,6 +2376,45 @@
       publishBtn.disabled = true;
 
       try {
+        // Step 0: If logo was uploaded as a data URL, commit it directly as images/logo-full.png
+        if(siteData.company && siteData.company.logo && siteData.company.logo.startsWith('data:image/')) {
+          try {
+            const rawBase64 = siteData.company.logo.split(',')[1];
+            if(rawBase64) {
+              let logoSha = null;
+              const logoGetRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/images/logo-full.png`, {
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+              });
+              if(logoGetRes.ok) {
+                const logoInfo = await logoGetRes.json();
+                logoSha = logoInfo.sha;
+              }
+              const logoPutRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/images/logo-full.png`, {
+                method: 'PUT',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Accept': 'application/vnd.github.v3+json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  message: 'Update official website logo via Admin Panel',
+                  content: rawBase64,
+                  sha: logoSha || undefined,
+                  branch: 'main'
+                })
+              });
+              if(logoPutRes.ok) {
+                siteData.company.logo = 'images/logo-full.png';
+                siteData.company.logoFull = 'images/logo-full.png';
+                const compLogoInp = document.getElementById('compLogo');
+                if(compLogoInp) compLogoInp.value = 'images/logo-full.png';
+              }
+            }
+          } catch(logoErr) {
+            console.warn('Could not commit binary logo image, keeping in JSON:', logoErr);
+          }
+        }
+
         // Step 1: Get current file SHA of data/site-data.json
         const filePath = 'data/site-data.json';
         let sha = null;

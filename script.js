@@ -261,6 +261,12 @@ _Sent via website contact form_`;
 
     // Update Company info in Header / Footer / Contact
     if(data.company) {
+      if(data.company.logo || data.company.logoFull) {
+        const logoSrc = data.company.logo || data.company.logoFull;
+        document.querySelectorAll('.logo img, .footer-logo-wrap img').forEach(img => {
+          img.src = logoSrc;
+        });
+      }
       if(data.company.email) {
         document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
           el.href = 'mailto:' + data.company.email;
